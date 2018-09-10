@@ -13,10 +13,14 @@
     <br>
   Crie uma Carteira para poder começar a controlar seus gastos!</p>
   <ion-list>
-    <ion-card ion-item class="wallet-card">
-      <h1 text-center ion-text color="primary">Dinheiro em Espécie</h1>
+    <ion-card ion-item class="wallet-card" *ngFor="let wallet of wallets; let i = index">
+      <h1 text-center ion-text color="primary">{{wallet.name}}</h1>
       <br>
-      <h2 ion-text color="primary">Saldo: <span ion-text color="success">R$900,00</span></h2>
+      <h2 ion-text color="primary">Saldo: 
+        <span ion-text color="primary" *ngIf="wallet.balance > 0" >R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
+        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
+        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance.toFixed(2).replace(".", ",").replace("-", "")}}</span>
+      </h2>
     </ion-card>
   </ion-list>
   <button ion-button color="primary" round outline block>Criar uma Carteira</button>

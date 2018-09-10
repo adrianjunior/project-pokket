@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the MyWalletsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import wallets from '../../assets/data/wallets';
+import { Wallet } from '../../assets/data/wallet.interface';
 
 @IonicPage()
 @Component({
@@ -15,11 +11,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class MyWalletsPage {
 
+  wallets: Wallet[];
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MyWalletsPage');
+    this.wallets = wallets;
   }
 
 }
