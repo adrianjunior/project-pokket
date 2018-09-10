@@ -18,7 +18,14 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'wallet' },
+      { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'cash' },
+      { title: 'Meus Diagnósticos', component: `MyWalletsPage`, icon: 'clipboard' },
+      { title: 'Meu Histórico', component: `MyWalletsPage`, icon: 'trending-up' },
+      { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open' },
+      { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done' },
+      { title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle' },
+      { title: 'Configuração', component: `MyWalletsPage`, icon: 'settings' },
+      { title: 'Sobre o Aplicativo', component: `MyWalletsPage`, icon: 'information-circle' },
     ];
 
   }
