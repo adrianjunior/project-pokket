@@ -1,5 +1,8 @@
+import { Transaction } from './transaction.interface';
+
 export interface Wallet {
-    id?: string;
+    id?: number;
     name: string;
     balance: number;
+    transactions?: Transaction[];
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import wallets from '../../assets/data/wallets';
-import { Wallet } from '../../assets/data/wallet.interface';
+import wallets from '../../../assets/data/wallets';
+import { Wallet } from '../../../assets/data/wallet.interface';
 
 @IonicPage()
 @Component({
@@ -11,13 +11,21 @@ import { Wallet } from '../../assets/data/wallet.interface';
 })
 export class MyWalletsPage {
 
-  wallets: Wallet[];
+  walletProfilePage: string = `WalletProfilePage`;
+
+  wallets: Wallet[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
     this.wallets = wallets;
+  }
+
+  goToWallet(id: number) {
+    this.navCtrl.push(this.walletProfilePage, {
+      id: id
+    });
   }
 
 }

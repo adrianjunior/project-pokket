@@ -1,0 +1,31 @@
+<ion-header no-border>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>Minhas Carteiras</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <p ion-text text-center *ngIf="wallets.length == 0">Ops!
+    <br> Parece que você ainda não possui uma Carteira.
+    <br> Crie uma Carteira clicando no botão de '+' ali em cima e comece a controlar seus gastos!</p>
+  <ion-list>
+    <ion-card ion-item class="wallet-card" *ngFor="let wallet of wallets; let i = index" (click)="goToWallet(wallet.id)">
+      <h1 text-center ion-text color="primary">{{wallet.name}}</h1>
+      <br>
+      <h2 ion-text color="primary">Saldo:
+        <span ion-text color="primary" *ngIf="wallet.balance > 0">R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
+        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
+        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance.toFixed(2).replace(".", ",").replace("-", "")}}</span>
+      </h2>
+    </ion-card>
+  </ion-list>
+</ion-content>
