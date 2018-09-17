@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
@@ -34,7 +34,7 @@ export class AddTransactionPage {
       'name': ['', Validators.required],
       'value': [null, Validators.required],
       'date': ['', Validators.required],
-      'category': ['', Validators.required],
+      'category': [''],
       'type': [null, Validators.required]
     })
   }
@@ -57,11 +57,12 @@ export class AddTransactionPage {
 
   createAlert() {
     let alert = this.alertCtrl.create({
-      title: `Deseja adicionar outra ${this.whatIs}`,
+      title: `Deseja adicionar outra ${this.whatIs}?`,
+      subTitle: 'Para adicionar mais uma receita, clique em sim.' + 
+                'Caso queira voltar para a página da carteira, clique em não.',
       buttons: [
         {
           text: 'Não',
-          role: 'cancel',
           handler: () => {
             this.navCtrl.pop();
           }
@@ -69,11 +70,7 @@ export class AddTransactionPage {
         {
           text: 'Sim',
           handler: () => {
-            this.name = '';
-            this.value = null;
-            this.date = '';
-            this.category = '';
-            this.type = null;
+            this.formGroup.reset();
           }
         }
       ]
