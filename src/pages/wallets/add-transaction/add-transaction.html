@@ -1,27 +1,40 @@
 <ion-header no-border>
   <ion-navbar color="light">
-    <ion-title>Adicionar Transação</ion-title>
+    <ion-title *ngIf="isIncome == true">Adicionar Receita</ion-title>
+    <ion-title *ngIf="isIncome == false">Adicionar Despesa</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <form (ngSubmit)="onSubmit()">
+  <form [formGroup]="formGroup" (ngSubmit)="addTransaction(form.value)">
     <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="todo.title" name="title"></ion-input>
+      <ion-label floating>Nome</ion-label>
+      <ion-input type="text" formControlName="name" name="name"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Valor</ion-label>
-      <ion-input type="text" [(ngModel)]="todo.title" name="title"></ion-input>
+      <ion-label floating>Valor</ion-label>
+      <ion-input type="number" formControlName="value" name="value"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="todo.title" name="title"></ion-input>
+      <ion-label floating>Data</ion-label>
+      <ion-input type="text" formControlName="date" name="date"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Nome</ion-label>
-      <ion-input type="text" [(ngModel)]="todo.title" name="title"></ion-input>
+      <ion-label floating>Categoria</ion-label>
+      <ion-input type="text" formControlName="category" name="category"></ion-input>
     </ion-item>
-    <button ion-button type="submit" block outline>Adicionar Transação</button>
+    <ion-item *ngIf="isIncome == false">
+      <ion-label floating>Tipo</ion-label>
+      <ion-select formControlName="type" name="type" interface="popover">
+        <ion-option value="1">Fixo Obrigatório</ion-option>
+        <ion-option value="2">Fixo Opcional</ion-option>
+        <ion-option value="3">Variável Obrigatório</ion-option>
+        <ion-option value="4">Variável Opcional</ion-option>
+        <ion-option value="10">Transferência entre Carteiras</ion-option>
+      </ion-select>
+    </ion-item>
+    <br>
+    <button ion-button type="submit" block outline *ngIf="isIncome == true">Adicionar Receita</button>
+    <button ion-button type="submit" block outline *ngIf="isIncome == false">Adicionar Despesa</button>
   </form>
 </ion-content>

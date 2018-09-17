@@ -11,7 +11,7 @@ import wallets from '../../../assets/data/wallets';
 })
 export class WalletProfilePage {
 
-  addTransactionPage: string = `AddTransactionPage`;
+  addTransactionPopoverPage: string = `AddTransactionPopoverPage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -28,9 +28,13 @@ export class WalletProfilePage {
     this.wallet = wallets.find(wallet => wallet.id == this.walletId);
   }
 
-  goToAddTransaction(id: string) {
-    this.navCtrl.push(this.addTransactionPage, {
+  showAddTransactionPopover(myEvent, id: string) {
+    const popover = this.popoverCtrl.create(this.addTransactionPopoverPage, {
       id: id
     });
+    popover.present({
+      ev: myEvent
+    });
   }
+
 }

@@ -8,11 +8,28 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AddTransactionPopoverPage {
 
+  addTransactionPage: string = `AddTransactionPage`;
+  id: number;
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddTransactionPopoverPage');
+    this.id = this.navParams.get('id');
+  }
+
+  goToAddIncome(id: string) {
+    this.navCtrl.push(this.addTransactionPage, {
+      isIncome: true,
+      id: this.id
+    });
+  }
+
+  goToAddExpense(id: string) {
+    this.navCtrl.push(this.addTransactionPage, {
+      isIncome: false,
+      id: this.id
+    });
   }
 
 }
