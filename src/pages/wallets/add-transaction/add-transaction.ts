@@ -13,7 +13,6 @@ import wallets from '../../../assets/data/wallets';
 export class AddTransactionPage {
 
   isIncome: boolean = false;
-  whatIs: string;
   walletId: number = 0;
   wallet: Wallet = {
     id: 0,
@@ -28,53 +27,25 @@ export class AddTransactionPage {
   type: number;
   formGroup: FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
-              public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder) {
+    this.isIncome = this.navParams.get('isIncome');
+    this.walletId = this.navParams.get('id');
+    this.wallet = wallets.find(wallet => wallet.id == this.walletId);
     this.formGroup = formBuilder.group({
       'name': ['', Validators.required],
       'value': [null, Validators.required],
       'date': ['', Validators.required],
       'category': [''],
       'type': [null, Validators.required]
-    })
-  }
-
-  ionViewDidLoad() {
-    this.isIncome = this.navParams.get('isIncome');
-    this.walletId = this.navParams.get('id');
-    this.wallet = wallets.find(wallet => wallet.id == this.walletId);
-    if(this.isIncome) {
-      this.whatIs = 'Receita'
-    } else {
-      this.whatIs = 'Despesa'
-    }
-  }
-
-  addTransaction(formValue: any) {
-    console.log(formValue);
-    this.createAlert();
-  }
-
-  createAlert() {
-    let alert = this.alertCtrl.create({
-      title: `Deseja adicionar outra ${this.whatIs}?`,
-      subTitle: 'Para adicionar mais uma receita, clique em sim.' + 
-                'Caso queira voltar para a página da carteira, clique em não.',
-      buttons: [
-        {
-          text: 'Não',
-          handler: () => {
-            this.navCtrl.pop();
-          }
-        },
-        {
-          text: 'Sim',
-          handler: () => {
-            this.formGroup.reset();
-          }
-        }
-      ]
     });
-    alert.present();
+  }
+
+  addTransaction(formValue: any, addMore: boolean) {
+    console.log(formValue);
+    if(addMore) {
+      this.formGroup.reset();
+    } else {
+      this.navCtrl.pop();
+    }
   }
 }

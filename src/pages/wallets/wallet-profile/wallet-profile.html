@@ -2,9 +2,6 @@
   <ion-navbar color="light">
     <ion-title>{{wallet.name}}</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only color="primary">
-        <ion-icon name="create"></ion-icon>
-      </button>
       <button ion-button icon-only color="primary" (click)="showAddTransactionPopover($event, wallet.id)">
         <ion-icon name="add"></ion-icon>
       </button>
@@ -37,7 +34,8 @@
   </div>
   <div class="wallet-transactions">
     <ion-list no-lines>
-      <button ion-item class="transaction-item" *ngFor="let transaction of wallet.transactions; let i = index">
+      <button ion-item class="transaction-item" *ngFor="let transaction of wallet.transactions; let i = index"
+              (click)="goToTransactionProfile(transaction.id)">
         <ion-grid>
           <ion-row>
             <ion-col col-3>

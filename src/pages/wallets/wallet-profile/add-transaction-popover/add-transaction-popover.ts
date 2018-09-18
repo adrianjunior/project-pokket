@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -11,7 +11,7 @@ export class AddTransactionPopoverPage {
   addTransactionPage: string = `AddTransactionPage`;
   id: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
   }
 
   ionViewDidLoad() {
@@ -23,6 +23,7 @@ export class AddTransactionPopoverPage {
       isIncome: true,
       id: this.id
     });
+    this.viewCtrl.dismiss();
   }
 
   goToAddExpense(id: string) {
@@ -30,6 +31,7 @@ export class AddTransactionPopoverPage {
       isIncome: false,
       id: this.id
     });
+    this.viewCtrl.dismiss();
   }
 
 }

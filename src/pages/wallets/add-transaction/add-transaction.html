@@ -6,7 +6,7 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="formGroup" (ngSubmit)="addTransaction(form)">
+  <form [formGroup]="formGroup" id="formGroup">
     <ion-item>
       <ion-label floating>Nome</ion-label>
       <ion-input type="text" formControlName="name" name="name"></ion-input>
@@ -17,13 +17,7 @@
     </ion-item>
     <ion-item>
       <ion-label floating>Data</ion-label>
-      <ion-select formControlName="date" name="date" interface="popover">
-        <ion-option value="0">Fixo Obrigatório</ion-option>
-        <ion-option value="1">Fixo Opcional</ion-option>
-        <ion-option value="3">Variável Obrigatório</ion-option>
-        <ion-option value="4">Variável Opcional</ion-option>
-        <ion-option value="10">Transferência entre Carteiras</ion-option>
-      </ion-select>
+      <ion-datetime formControlName="date" name="date" displayFormat="DD/MM/YYYY" [(ngModel)]="date"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label floating>Categoria</ion-label>
@@ -32,13 +26,21 @@
     <ion-item *ngIf="isIncome == false">
       <ion-label floating>Tipo</ion-label>
       <ion-select formControlName="type" name="type" interface="popover">
-        <ion-option value="today">Hoje</ion-option>
-        <ion-option value="yesterday">Ontem</ion-option>
-        <ion-option value="custom">Selecionar dia</ion-option>
+        <ion-option value="0">Fixo Obrigatório</ion-option>
+        <ion-option value="1">Fixo Opcional</ion-option>
+        <ion-option value="3">Variável Obrigatório</ion-option>
+        <ion-option value="4">Variável Opcional</ion-option>
+        <ion-option value="10">Transferência entre Carteiras</ion-option>
       </ion-select>
     </ion-item>
     <br>
-    <button ion-button type="submit" block outline *ngIf="isIncome == true">Adicionar Receita</button>
-    <button ion-button type="submit" block outline *ngIf="isIncome == false">Adicionar Despesa</button>
+    <div *ngIf="isIncome == true">
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Receita e adicionar outra</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Receita e voltar</button>
+    </div>
+    <div *ngIf="isIncome == false">
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Despesa e adicionar outra</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Despesa e voltar</button>
+    </div>
   </form>
 </ion-content>

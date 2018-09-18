@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController } from 'ionic-angular';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
@@ -9,9 +9,10 @@ import wallets from '../../../assets/data/wallets';
   selector: 'page-wallet-profile',
   templateUrl: 'wallet-profile.html',
 })
-export class WalletProfilePage {
+export class WalletProfilePage implements OnInit {
 
   addTransactionPopoverPage: string = `AddTransactionPopoverPage`;
+  editTransactionPage: string = `EditTransactionPage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -23,7 +24,7 @@ export class WalletProfilePage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public popoverCtrl: PopoverController) {
   }
 
-  ionViewDidLoad() {
+  ngOnInit() {
     this.walletId = this.navParams.get('id');
     this.wallet = wallets.find(wallet => wallet.id == this.walletId);
   }
@@ -37,4 +38,9 @@ export class WalletProfilePage {
     });
   }
 
+  goToTransactionProfile(id: number){
+    this.navCtrl.push(this.editTransactionPage, {
+      id: id,
+    });
+  }
 }
