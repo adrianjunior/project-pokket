@@ -12,7 +12,7 @@ import wallets from '../../../assets/data/wallets';
 export class WalletProfilePage implements OnInit {
 
   addTransactionPopoverPage: string = `AddTransactionPopoverPage`;
-  editTransactionPage: string = `EditTransactionPage`;
+  transactionProfilePage: string = `transactionProfilePage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -39,7 +39,7 @@ export class WalletProfilePage implements OnInit {
   }
 
   goToTransactionProfile(id: number){
-    this.navCtrl.push(this.editTransactionPage, {
+    this.navCtrl.push(this.transactionProfilePage, {
       id: id,
     });
   }

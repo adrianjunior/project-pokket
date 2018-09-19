@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import wallets from '../../../assets/data/wallets';
@@ -6,10 +6,10 @@ import { Transaction } from '../../../assets/data/transaction.interface';
 
 @IonicPage()
 @Component({
-  selector: 'page-edit-transaction',
-  templateUrl: 'edit-transaction.html',
+  selector: 'page-transaction-profile',
+  templateUrl: 'transaction-profile.html',
 })
-export class EditTransactionPage implements OnInit {
+export class TransactionProfilePage {
 
   transactionId: number;
   transaction: Transaction = {
@@ -28,5 +28,4 @@ export class EditTransactionPage implements OnInit {
     this.transactionId = this.navParams.get('id');
   }
 
-  
 }
