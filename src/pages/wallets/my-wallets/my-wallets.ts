@@ -68,7 +68,7 @@ export class MyWalletsPage implements OnInit {
                   })
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }
@@ -80,7 +80,7 @@ export class MyWalletsPage implements OnInit {
                   console.log(this.wallets);
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }

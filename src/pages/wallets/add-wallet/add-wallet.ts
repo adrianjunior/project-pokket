@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Transaction } from '../../../assets/data/transaction.interface';
 
 @IonicPage()
 @Component({
@@ -14,6 +15,7 @@ export class AddWalletPage implements OnInit {
   
   nextId: number;
   walletsIds: number[];
+  firstTransaction: Transaction;
 
   // Form Items
   name: string;
@@ -68,12 +70,17 @@ export class AddWalletPage implements OnInit {
                     } else {
                       this.navCtrl.pop();
                     }
-                    this.presentToast('Parabéns. Sua Carteira foi criada com sucesso!', 'top', 3000);
+                    this.presentToast('Parabéns. Sua Carteira foi criada com sucesso!', 'bottom', 3000);
                   })
                   .catch(err => {
-                    this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'top', 3000);
+                    this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
                     console.log(err);
                   })
+  }
+
+  setWalletInitialBalance(id: number, value: number) {
+    
+    this.storage.set(`Wallet ${id} Transactions`, [value])
   }
 
   getWalletsIds() {
@@ -88,14 +95,14 @@ export class AddWalletPage implements OnInit {
                   this.getNextId();
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
                 })
   }
 
   setWalletsIds(walletsIds: number[]) {
     this.storage.set('WalletsIds', walletsIds)
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
                 })
   }
 
@@ -110,7 +117,7 @@ export class AddWalletPage implements OnInit {
                   console.log((this.nextId));
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
                 })
   }
 
