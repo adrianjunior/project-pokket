@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController  } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import moment from 'moment';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -16,6 +17,8 @@ export class AddWalletPage implements OnInit {
   nextId: number;
   walletsIds: number[];
   firstTransaction: Transaction;
+  transactionNextId: number;
+  transactionsIds: number[];
 
   // Form Items
   name: string;
@@ -28,7 +31,7 @@ export class AddWalletPage implements OnInit {
 
   ngOnInit() {
     this.walletsIds = [];
-    console.log('WALLETSIDS' + this.walletsIds);
+    this.transactionsIds = [];
     
     this.getNextId();
     this.getWalletsIds();
@@ -65,6 +68,12 @@ export class AddWalletPage implements OnInit {
                     this.setWalletsIds(this.walletsIds);
                   })
                   .then(() => {
+                    this.setWalletInitialBalance(wallet.id, wallet.balance);
+                  })
+                  .then(() => {
+                    this.setNextTransactionId(wallet.id);
+                  })
+                  .then(() => {
                     if(addMore) {      
                       this.formGroup.reset();
                     } else {
@@ -79,8 +88,22 @@ export class AddWalletPage implements OnInit {
   }
 
   setWalletInitialBalance(id: number, value: number) {
-    
-    this.storage.set(`Wallet ${id} Transactions`, [value])
+    this.firstTransaction = {
+      id: 1,
+      name: 'Valor Inicial',
+      value: value,
+      date: moment().locale('pt-br').format('L'),
+      wallet: id
+    }
+    this.storage.set(`Wallet ${id} Transactions`, [this.firstTransaction])
+                .catch(err => {
+                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
+                  console.log(err);
+                })
+  }
+
+  setNextTransactionId(walletId: number) {
+    this.storage.set(`Wallet ${walletId} Next Transaction id`, 2)
   }
 
   getWalletsIds() {

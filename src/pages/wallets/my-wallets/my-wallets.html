@@ -21,9 +21,9 @@
       <h1 text-center ion-text color="primary">{{wallet.name}}</h1>
       <br>
       <h2 ion-text color="primary">Saldo:
-        <span ion-text color="primary" *ngIf="wallet.balance > 0">R${{wallet.balance.toString().replace(".", ",")}}</span>
-        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance.toString().replace(".", ",")}}</span>
-        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance.toString().replace(".", ",").replace("-", "")}}</span>
+        <span ion-text color="primary" *ngIf="wallet.balance > 0">R${{wallet.balance}}</span>
+        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance}}</span>
+        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance}}</span>
       </h2>
     </ion-card>
   </ion-list>

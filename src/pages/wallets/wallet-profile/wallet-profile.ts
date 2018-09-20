@@ -12,7 +12,7 @@ import { Transaction } from '../../../assets/data/transaction.interface';
 })
 export class WalletProfilePage implements OnInit {
 
-  addTransactionPopoverPage: string = `AddTransactionPopoverPage`;
+  addTransactionPage: string = `AddTransactionPage`;
   transactionProfilePage: string = `TransactionProfilePage`;
 
   walletId: number;
@@ -21,32 +21,39 @@ export class WalletProfilePage implements OnInit {
     name: '',
     balance: 0
   };
-  transactions: Transaction[] = [];
+  transactions: Transaction[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public popoverCtrl: PopoverController, private storage: Storage,
               private toastCtrl: ToastController) {
   }
 
-  ngOnInit() {
+  ionViewWillEnter(){
+    
     this.walletId = this.navParams.get('id');
     this.getWallet(this.walletId);
     this.getWalletTransactions(this.walletId);
   }
 
-  showAddTransactionPopover(myEvent, id: string) {
-    const popover = this.popoverCtrl.create(this.addTransactionPopoverPage, {
-      id: id
-    });
-    popover.present({
-      ev: myEvent
-    });
+  ngOnInit() {
+    this.transactions = [];
   }
 
-  goToTransactionProfile(id: number){
+  goToTransactionProfile(id: number) {
     this.navCtrl.push(this.transactionProfilePage, {
       id: id,
     });
+  }
+
+  goToAddTransaction(isIncome: boolean) {
+    this.navCtrl.push(this.addTransactionPage, {
+      isIncome: isIncome,
+      id: this.walletId
+    });
+  }
+  
+  goToWalletExtract() {
+
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -77,6 +84,7 @@ export class WalletProfilePage implements OnInit {
                 .then(val => {
                   if(val != null) {
                     this.transactions = val;
+                    console.log('Transactions => ' + this.transactions);
                   }
                 })
                 .catch(err => {
