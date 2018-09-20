@@ -5,7 +5,7 @@
     </button>
     <ion-title>Minhas Carteiras</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only color="primary">
+      <button ion-button icon-only color="primary" (click)="goToAddWallet()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
@@ -21,9 +21,9 @@
       <h1 text-center ion-text color="primary">{{wallet.name}}</h1>
       <br>
       <h2 ion-text color="primary">Saldo:
-        <span ion-text color="primary" *ngIf="wallet.balance > 0">R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
-        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance.toFixed(2).replace(".", ",")}}</span>
-        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance.toFixed(2).replace(".", ",").replace("-", "")}}</span>
+        <span ion-text color="primary" *ngIf="wallet.balance > 0">R${{wallet.balance.toString().replace(".", ",")}}</span>
+        <span ion-text color="lightgray" *ngIf="wallet.balance == 0">R${{wallet.balance.toString().replace(".", ",")}}</span>
+        <span ion-text color="danger" *ngIf="wallet.balance < 0">-R${{wallet.balance.toString().replace(".", ",").replace("-", "")}}</span>
       </h2>
     </ion-card>
   </ion-list>

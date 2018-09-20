@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController } from 'ionic-angular';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
-import wallets from '../../../assets/data/wallets';
 
 @IonicPage()
 @Component({
@@ -12,7 +11,7 @@ import wallets from '../../../assets/data/wallets';
 export class WalletProfilePage implements OnInit {
 
   addTransactionPopoverPage: string = `AddTransactionPopoverPage`;
-  transactionProfilePage: string = `transactionProfilePage`;
+  transactionProfilePage: string = `TransactionProfilePage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -26,7 +25,6 @@ export class WalletProfilePage implements OnInit {
 
   ngOnInit() {
     this.walletId = this.navParams.get('id');
-    this.wallet = wallets.find(wallet => wallet.id == this.walletId);
   }
 
   showAddTransactionPopover(myEvent, id: string) {

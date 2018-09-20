@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import wallets from '../../../assets/data/wallets';
 import { Transaction } from '../../../assets/data/transaction.interface';
 
 @IonicPage()

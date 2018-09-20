@@ -1,0 +1,30 @@
+<ion-header no-border>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>Adicionar Carteira</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formGroup" id="formGroup">
+    <h2>Primeiro Passo: Dê um nome para sua Carteira.</h2>
+    <p>Exemplos: 'Conta do Bradesco', 'Dinheiro em Espécie'...</p>
+    <ion-item>
+      <ion-label floating>Nome da Carteira</ion-label>
+      <ion-input type="text" formControlName="name" name="name"></ion-input>
+    </ion-item>
+    <h2>Segundo Passo: Dê um valor inicial para sua Carteira.</h2>
+    <p>Caso você já possua algum dinheiro nesta Carteira, indique o valor aqui.</p>
+    <ion-item>
+      <ion-label floating>Valor Inicial</ion-label>
+      <ion-input type="number" formControlName="balance" name="balance"></ion-input>
+    </ion-item>
+    <br>
+    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, true)">
+      Salvar Carteira e adicionar outra</button>
+    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, false)">
+      Salvar Carteira e voltar</button>
+  </form>
+</ion-content>

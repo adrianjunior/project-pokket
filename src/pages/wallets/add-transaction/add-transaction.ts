@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { Wallet } from '../../../assets/data/wallet.interface';
-import wallets from '../../../assets/data/wallets';
 
 @IonicPage()
 @Component({
@@ -30,7 +29,6 @@ export class AddTransactionPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder) {
     this.isIncome = this.navParams.get('isIncome');
     this.walletId = this.navParams.get('id');
-    this.wallet = wallets.find(wallet => wallet.id == this.walletId);
     this.formGroup = formBuilder.group({
       'name': ['', Validators.required],
       'value': [null, Validators.required],
