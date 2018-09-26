@@ -16,8 +16,9 @@ export class TransactionProfilePage {
     name: '',
     value: 0,
     date: '',
-    category: 0,
-    type: ''
+    category: '',
+    type: 0,
+    wallet: 0
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {

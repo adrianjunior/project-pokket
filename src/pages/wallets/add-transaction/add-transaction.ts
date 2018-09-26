@@ -23,6 +23,7 @@ export class AddTransactionPage implements OnInit {
     name: '',
     balance: 0
   };
+  whatIs: string;
 
   name: string;
   value: number;
@@ -49,6 +50,12 @@ export class AddTransactionPage implements OnInit {
     });
     this.getTransactions(this.walletId);
     this.getNextTransactionId(this.walletId);
+    this.getWallet(this.walletId);
+    if(this.isIncome) {
+      this.whatIs = 'Receita'
+    } else {
+      this.whatIs = 'Despesa'
+    } 
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -67,7 +74,7 @@ export class AddTransactionPage implements OnInit {
   addTransaction(formValue: any, addMore: boolean) {
     let date: string = formValue.date;
     date = moment(date.replace('-', ''), 'YYYYMMDD').locale('pt-br').format('L').toString();
-    let value: number = formValue.value;
+    let value: number = eval(formValue.value);
     if(!this.isIncome) {
       value = value*-1;
     }
@@ -92,23 +99,21 @@ export class AddTransactionPage implements OnInit {
                   } else {
                     this.navCtrl.pop();
                   }
-                  let text;
-                  if(this.isIncome) {
-                    text = 'Receita';
-                  } else {
-                    text = 'Despesa';
-                  }
-                  this.presentToast('Parabéns. Sua Carteira foi adicionada com sucesso!', 'bottom', 3000);
+                  this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
                 })
                 .then(() => {
                   this.setNextTransactionId(this.walletId, this.nextId+1);
                 })
-
-    if(addMore) {
-      this.formGroup.reset();
-    } else {
-      this.navCtrl.pop();
-    }
+                .then(() => {
+                  console.log('Antes ' + this.wallet.balance);
+                  this.wallet.balance = this.wallet.balance + transaction.value;
+                  console.log('Depois ' + this.wallet.balance);
+                  this.setWallet(this.walletId, this.wallet);
+                })
+                .catch(err => {
+                  this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
+                  console.log(err);
+                })
   }
 
   getTransactions(walletId: number) {
@@ -137,6 +142,22 @@ export class AddTransactionPage implements OnInit {
                     console.log(this.nextId);
                   }
                 })
+  }
+
+  getWallet(id: number) {
+    this.storage.get(`Wallet ${id}`)
+                .then(val => {
+                  this.wallet = val;
+                })
+                .catch(err => {
+                  this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
+                  console.log(err);
+                })
+  }
+
+  setWallet(id: number, wallet: Wallet) {
+    this.storage.set(`Wallet ${id}`, wallet);
+    console.log(wallet);
   }
 
 }
