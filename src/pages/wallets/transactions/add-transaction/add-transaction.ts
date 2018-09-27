@@ -4,8 +4,8 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 
-import { Wallet } from '../../../assets/data/wallet.interface';
-import { Transaction } from '../../../assets/data/transaction.interface';
+import { Wallet } from '../../../../models/wallet.interface';
+import { Transaction } from '../../../../models/transaction.interface';
 
 @IonicPage()
 @Component({
@@ -14,7 +14,7 @@ import { Transaction } from '../../../assets/data/transaction.interface';
 })
 export class AddTransactionPage implements OnInit {
 
-  transactions: Transaction[];
+  transactionsIds: number[];
   nextId: number;
   isIncome: boolean;
   walletId: number;
@@ -38,7 +38,7 @@ export class AddTransactionPage implements OnInit {
   }
 
   ngOnInit() {
-    this.transactions = [];
+    this.transactionsIds = [];
     this.isIncome = this.navParams.get('isIncome');
     this.walletId = this.navParams.get('id');
     this.formGroup = this.formBuilder.group({
@@ -73,7 +73,7 @@ export class AddTransactionPage implements OnInit {
 
   addTransaction(formValue: any, addMore: boolean) {
     let date: string = formValue.date;
-    date = moment(date.replace('-', ''), 'YYYYMMDD').locale('pt-br').format('L').toString();
+    date = moment(date).format('YYYY-MM-DD');
     let value: number = eval(formValue.value);
     if (value > 0) {
       if (!this.isIncome) {
@@ -92,17 +92,12 @@ export class AddTransactionPage implements OnInit {
       if (formValue.type != null) {
         transaction.type = formValue.type;
       }
-      this.transactions.push(transaction)
-      this.storage.set(`Wallet ${this.walletId} Transactions`, this.transactions)
+      this.storage.set(`Wallet ${this.walletId} Transaction ${this.nextId}`, transaction)
         .then(() => {
-          if (addMore) {
-            this.formGroup.reset();
-          } else {
-            this.navCtrl.pop();
-          }
-          this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
+          this.setTransactions(this.walletId, this.nextId);
         })
         .then(() => {
+          this.nextId += 1;
           this.setNextTransactionId(this.walletId, this.nextId + 1);
         })
         .then(() => {
@@ -110,6 +105,14 @@ export class AddTransactionPage implements OnInit {
           this.wallet.balance = this.wallet.balance + transaction.value;
           console.log('Depois ' + this.wallet.balance);
           this.setWallet(this.walletId, this.wallet);
+        })
+        .then(() => {
+          if (addMore) {
+            this.formGroup.reset();
+          } else {
+            this.navCtrl.pop();
+          }
+          this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
         })
         .catch(err => {
           this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
@@ -124,14 +127,18 @@ export class AddTransactionPage implements OnInit {
     this.storage.get(`Wallet ${walletId} Transactions`)
       .then(val => {
         if (val != null) {
-          this.transactions = val;
-          console.log(this.transactions);
+          this.transactionsIds = val;
         }
       })
       .catch(err => {
         this.presentToast('Ocorreu um erro ao carregar suas Receitas e Despesas. Por favor, reinicie o app.', 'bottom', 3000);
         console.log(err);
       })
+  }
+
+  setTransactions(walletId: number, id: number) {
+    this.transactionsIds.push(id);
+    this.storage.set(`Wallet ${walletId} Transactions`, this.transactionsIds)
   }
 
   setNextTransactionId(walletId: number, id: number) {

@@ -3,9 +3,9 @@ import { IonicPage, NavController, NavParams, ToastController  } from 'ionic-ang
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 
-import { Wallet } from '../../../assets/data/wallet.interface';
+import { Wallet } from '../../../models/wallet.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Transaction } from '../../../assets/data/transaction.interface';
+import { Transaction } from '../../../models/transaction.interface';
 
 @IonicPage()
 @Component({
@@ -52,6 +52,8 @@ export class AddWalletPage implements OnInit {
   }
 
   // DATABASE FUNCTIONS
+
+  // Adiciona uma nova carteira
   addWallet(formValue: any, addMore: boolean) {
     let wallet: Wallet = {
       id: this.nextId,
@@ -61,19 +63,28 @@ export class AddWalletPage implements OnInit {
     this.storage.set(`Wallet ${wallet.id}`, wallet)
                   .then(() => {
                     this.nextId += 1;
+                    // Seta a ID da próxima carteira a ser criada
                     this.setNextId(this.nextId);
                   })
                   .then(() => {
                     this.walletsIds.push(wallet.id);
+                    // Adiciona a ID da carteira criada para a lista de carteiras
                     this.setWalletsIds(this.walletsIds);
                   })
                   .then(() => {
+                    // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
                     this.setWalletInitialBalance(wallet.id, wallet.balance);
                   })
                   .then(() => {
+                    // Seta a ID da próxima  transação a ser criada
                     this.setNextTransactionId(wallet.id);
                   })
                   .then(() => {
+                    // Adiciona a ID da transação criada para a lista de transações
+                    this.setWalletTransactions(wallet.id, [1]);
+                  })
+                  .then(() => {
+                    // Checa se o usuário entrou com a opção de adicionar uma nova carteira ou voltar para a lista
                     if(addMore) {      
                       this.formGroup.reset();
                     } else {
@@ -87,25 +98,34 @@ export class AddWalletPage implements OnInit {
                   })
   }
 
+  setNextId(id: number) {
+    this.storage.set('Next Wallet id', id)
+  }
+
+  setWalletsIds(walletsIds: number[]) {
+    this.storage.set('WalletsIds', walletsIds)
+  }
+
   setWalletInitialBalance(id: number, value: number) {
     this.firstTransaction = {
       id: 1,
       name: 'Valor Inicial',
       value: value,
-      date: moment().locale('pt-br').format('L'),
+      date: moment().format('YYYY-MM-DD'),
       wallet: id
     }
-    this.storage.set(`Wallet ${id} Transactions`, [this.firstTransaction])
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
-                  console.log(err);
-                })
+    this.storage.set(`Wallet ${id} Transaction 1`, this.firstTransaction)
   }
 
   setNextTransactionId(walletId: number) {
     this.storage.set(`Wallet ${walletId} Next Transaction id`, 2)
   }
 
+  setWalletTransactions(id: number, transactions: number[]) {
+    this.storage.set(`Wallet ${id} Transactions`, transactions)
+  }
+
+  // Recebe a lista de carteiras
   getWalletsIds() {
     this.storage.get('WalletsIds')
                 .then(val => {
@@ -117,20 +137,11 @@ export class AddWalletPage implements OnInit {
                 .then(() => {
                   this.getNextId();
                 })
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
-                })
   }
 
-  setWalletsIds(walletsIds: number[]) {
-    this.storage.set('WalletsIds', walletsIds)
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
-                })
-  }
-
+  // Recebe a próxima ID de carteira ser cadastrada
   getNextId() {
-    this.storage.get('Next id')
+    this.storage.get('Next Wallet id')
                 .then(val => {
                   if(val != null) {
                     this.nextId = val;
@@ -139,13 +150,8 @@ export class AddWalletPage implements OnInit {
                   }
                   console.log((this.nextId));
                 })
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottom', 3000);
-                })
   }
 
-  setNextId(id: number) {
-    this.storage.set('Next id', id)
-  }
+  
 
 }

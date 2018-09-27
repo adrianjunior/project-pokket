@@ -4,8 +4,8 @@ import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angu
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 
-import { Wallet } from '../../../assets/data/wallet.interface';
-import { Transaction } from '../../../assets/data/transaction.interface';
+import { Wallet } from '../../../../models/wallet.interface';
+import { Transaction } from '../../../../models/transaction.interface';
 
 @IonicPage()
 @Component({
@@ -14,14 +14,9 @@ import { Transaction } from '../../../assets/data/transaction.interface';
 })
 export class TransactionProfilePage {
 
-  transactions: Transaction[];
   isIncome: boolean;
   walletId: number;
-  wallet: Wallet = {
-    id: 0,
-    name: '',
-    balance: 0
-  };
+  wallet: Wallet;
   whatIs: string;
   transactionId: number;
   transaction: Transaction;
@@ -39,7 +34,6 @@ export class TransactionProfilePage {
   }
 
   ngOnInit() {
-    this.transactions = [];
     this.walletId = this.navParams.get('walletId');
     this.transactionId = this.navParams.get('transactionId');
     this.transaction = {
@@ -51,6 +45,11 @@ export class TransactionProfilePage {
       type: 0,
       wallet: 0
     }
+    this.wallet =  {
+      id: 0,
+      name: '',
+      balance: 0
+    };
     this.getTransaction(this.walletId, this.transactionId);
     this.formGroup = this.formBuilder.group({
       'name': ['', Validators.required],
@@ -72,15 +71,12 @@ export class TransactionProfilePage {
   }
 
   // DATABASE FUNCTIONS
+
   getTransaction(walletId: number, transactionId: number) {
-    this.storage.get(`Wallet ${walletId} Transactions`)
+    this.storage.get(`Wallet ${walletId} Transaction ${transactionId}`)
       .then(val => {
-        let transactions: Transaction[];
         if (val != null) {
-          transactions = val;
-          this.transaction = transactions.find((t) => {
-            return t.id == transactionId;
-          })
+          this.transaction = val;
           if (this.transaction.value > 0) {
             this.isIncome = true;
             this.whatIs = 'Receita'
@@ -91,7 +87,7 @@ export class TransactionProfilePage {
           this.formGroup = this.formBuilder.group({
             'name': [this.transaction.name, Validators.required],
             'value': [this.transaction.value, Validators.required],
-            'date': [moment(this.transaction.date.replace('/', '')), Validators.required],
+            'date': [this.transaction.date, Validators.required],
             'category': [this.transaction.category],
             'type': [this.transaction.type]
           });

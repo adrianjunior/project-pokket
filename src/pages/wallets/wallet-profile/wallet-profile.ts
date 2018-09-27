@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
-import { Wallet } from '../../../assets/data/wallet.interface';
-import { Transaction } from '../../../assets/data/transaction.interface';
+import { Wallet } from '../../../models/wallet.interface';
+import { Transaction } from '../../../models/transaction.interface';
 
 @IonicPage()
 @Component({
   selector: 'page-wallet-profile',
   templateUrl: 'wallet-profile.html',
 })
-export class WalletProfilePage implements OnInit {
+export class WalletProfilePage {
 
   addTransactionPage: string = `AddTransactionPage`;
   transactionProfilePage: string = `TransactionProfilePage`;
@@ -21,7 +21,8 @@ export class WalletProfilePage implements OnInit {
     name: '',
     balance: 0
   };
-  transactions: Transaction[];
+  transactionsIds: number[] = [];
+  transactions: Transaction[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public popoverCtrl: PopoverController, private storage: Storage,
@@ -29,14 +30,11 @@ export class WalletProfilePage implements OnInit {
   }
 
   ionViewWillEnter(){
-    
+    this.transactions = [];
+    this.transactionsIds = [];
     this.walletId = this.navParams.get('id');
     this.getWallet(this.walletId);
     this.getWalletTransactions(this.walletId);
-  }
-
-  ngOnInit() {
-    this.transactions = [];
   }
 
   goToTransactionProfile(transactionId: number, walletId: number = this.walletId) {
@@ -69,6 +67,7 @@ export class WalletProfilePage implements OnInit {
 
   // DATABASE FUNCTIONS
 
+  // Recebe a carteira atual
   getWallet(id: number) {
     this.storage.get(`Wallet ${id}`)
                 .then(val => {
@@ -80,17 +79,28 @@ export class WalletProfilePage implements OnInit {
                 })
   }
 
+  // Recebe as transações da carteira atual
   getWalletTransactions(walletId: number) {
     this.storage.get(`Wallet ${walletId} Transactions`)
                 .then(val => {
                   if(val != null) {
-                    this.transactions = val;
-                    console.log('Transactions => ' + this.transactions);
+                    this.transactionsIds = val;
                   }
+                  this.transactionsIds.forEach(id => {
+                    // Recebe uma carteira
+                    this.getTransaction(id, walletId);
+                  })
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
+                })
+  }
+
+  getTransaction(id: number, walletId: number) {
+    this.storage.get(`Wallet ${walletId} Transaction ${id}`)
+                .then(val => {
+                  this.transactions.push(val)
                 })
   }
 }

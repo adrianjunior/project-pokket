@@ -18,7 +18,7 @@
   </header>
   <div class="wallet-transactions-header">
     <h2 text-center>Extrato da Carteira</h2>
-    <ion-grid *ngIf="transactions.length > 0">
+    <ion-grid *ngIf="transactionsIds.length > 0">
       <ion-row>
         <ion-col col-3>
           <p ion-text text-center>Data</p>
@@ -31,7 +31,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <h4 text-center *ngIf="transactions.length == 0">Você não possui nenhuma receita ou despesa nesta Carteira!</h4>
+    <h4 text-center *ngIf="transactionsIds.length <= 0">Você não possui nenhuma receita ou despesa nesta Carteira!</h4>
   </div>
   <div class="wallet-transactions">
     <ion-list no-lines>

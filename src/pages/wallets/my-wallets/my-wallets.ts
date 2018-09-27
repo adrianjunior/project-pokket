@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
-import { Wallet } from '../../../assets/data/wallet.interface';
+import { Wallet } from '../../../models/wallet.interface';
 
 @IonicPage()
 @Component({
@@ -52,18 +52,16 @@ export class MyWalletsPage implements OnInit {
 
   // DATABASE FUNCTIONS
 
+  // Recebe as IDs das carteiras
   getWalletsIds() {
-    console.log("getWalletsIds")
     this.storage.get('WalletsIds')
                 .then(val => {
                   this.wallets = [];
                   if (val != null) {
                     this.walletsIds = val;
-                    console.log('WALLETSIDS' + this.walletsIds);
                   }
-                })
-                .then(() => {
                   this.walletsIds.forEach(id => {
+                    // Recebe uma carteira
                     this.getWallet(id);
                   })
                 })
@@ -73,6 +71,7 @@ export class MyWalletsPage implements OnInit {
                 })
   }
 
+  // Recebe uma carteira
   getWallet(id: number) {
     this.storage.get(`Wallet ${id}`)
                 .then(val => {
