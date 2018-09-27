@@ -39,9 +39,10 @@ export class WalletProfilePage implements OnInit {
     this.transactions = [];
   }
 
-  goToTransactionProfile(id: number) {
+  goToTransactionProfile(transactionId: number, walletId: number = this.walletId) {
     this.navCtrl.push(this.transactionProfilePage, {
-      id: id,
+      transactionId: transactionId,
+      walletId: walletId
     });
   }
 
@@ -74,7 +75,7 @@ export class WalletProfilePage implements OnInit {
                   this.wallet = val;
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }
@@ -88,7 +89,7 @@ export class WalletProfilePage implements OnInit {
                   }
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'top', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }

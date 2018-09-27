@@ -1,6 +1,6 @@
 page-wallet-profile {
     .wallet-header {
-        border-bottom: 1px solid rgb(230, 230, 230);
+        border-bottom: 1px solid color($colors, midlight, base);
     }
     .wallet-transactions-header {
         margin-top: 16px;
@@ -8,11 +8,14 @@ page-wallet-profile {
     .label {
         margin: 0 0 0 0;
     }
+    .wallet-transactions {
+        border-bottom: 1px solid color($colors, midlight, base);
+    }
     .transaction-item {
         padding-right: 0!important;
         padding-left: 0!important;
     } 
-    .btn-add{
+    .btn-add {
         margin-top: 10px;
         margin-bottom: 10px;
         border-radius: 5px;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 
@@ -16,8 +16,8 @@ export class AddTransactionPage implements OnInit {
 
   transactions: Transaction[];
   nextId: number;
-  isIncome: boolean = false;
-  walletId: number = 0;
+  isIncome: boolean;
+  walletId: number;
   wallet: Wallet = {
     id: 0,
     name: '',
@@ -33,8 +33,8 @@ export class AddTransactionPage implements OnInit {
   formGroup: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public formBuilder: FormBuilder, public storage: Storage,
-              public toastCtrl: ToastController) {
+    public formBuilder: FormBuilder, public storage: Storage,
+    public toastCtrl: ToastController) {
   }
 
   ngOnInit() {
@@ -51,11 +51,11 @@ export class AddTransactionPage implements OnInit {
     this.getTransactions(this.walletId);
     this.getNextTransactionId(this.walletId);
     this.getWallet(this.walletId);
-    if(this.isIncome) {
+    if (this.isIncome) {
       this.whatIs = 'Receita'
     } else {
       this.whatIs = 'Despesa'
-    } 
+    }
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -75,59 +75,63 @@ export class AddTransactionPage implements OnInit {
     let date: string = formValue.date;
     date = moment(date.replace('-', ''), 'YYYYMMDD').locale('pt-br').format('L').toString();
     let value: number = eval(formValue.value);
-    if(!this.isIncome) {
-      value = value*-1;
+    if (value > 0) {
+      if (!this.isIncome) {
+        value = value * -1;
+      }
+      let transaction: Transaction = {
+        id: this.nextId,
+        name: formValue.name,
+        value: value,
+        date: date,
+        wallet: this.walletId
+      }
+      if (formValue.category != null) {
+        transaction.category = formValue.category;
+      }
+      if (formValue.type != null) {
+        transaction.type = formValue.type;
+      }
+      this.transactions.push(transaction)
+      this.storage.set(`Wallet ${this.walletId} Transactions`, this.transactions)
+        .then(() => {
+          if (addMore) {
+            this.formGroup.reset();
+          } else {
+            this.navCtrl.pop();
+          }
+          this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
+        })
+        .then(() => {
+          this.setNextTransactionId(this.walletId, this.nextId + 1);
+        })
+        .then(() => {
+          console.log('Antes ' + this.wallet.balance);
+          this.wallet.balance = this.wallet.balance + transaction.value;
+          console.log('Depois ' + this.wallet.balance);
+          this.setWallet(this.walletId, this.wallet);
+        })
+        .catch(err => {
+          this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
+          console.log(err);
+        })
+    } else {
+      this.presentToast('O valor não pode ser 0.', 'bottom', 3000);
     }
-    let transaction: Transaction = {
-      id: this.nextId,
-      name: formValue.name,
-      value: value,
-      date: date,
-      wallet: this.walletId
-    }
-    if (formValue.category != null) {
-      transaction.category = formValue.category;
-    }
-    if (formValue.type != null) {
-      transaction.type = formValue.type;
-    }
-    this.transactions.push(transaction)
-    this.storage.set(`Wallet ${this.walletId} Transactions`, this.transactions)
-                .then(() => {
-                  if(addMore) {      
-                    this.formGroup.reset();
-                  } else {
-                    this.navCtrl.pop();
-                  }
-                  this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
-                })
-                .then(() => {
-                  this.setNextTransactionId(this.walletId, this.nextId+1);
-                })
-                .then(() => {
-                  console.log('Antes ' + this.wallet.balance);
-                  this.wallet.balance = this.wallet.balance + transaction.value;
-                  console.log('Depois ' + this.wallet.balance);
-                  this.setWallet(this.walletId, this.wallet);
-                })
-                .catch(err => {
-                  this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
-                  console.log(err);
-                })
   }
 
   getTransactions(walletId: number) {
     this.storage.get(`Wallet ${walletId} Transactions`)
-                .then(val => {
-                  if(val != null) {
-                    this.transactions = val;
-                    console.log(this.transactions);
-                  }
-                })
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Receitas e Despesas. Por favor, reinicie o app.', 'bottom', 3000);
-                  console.log(err);
-                })
+      .then(val => {
+        if (val != null) {
+          this.transactions = val;
+          console.log(this.transactions);
+        }
+      })
+      .catch(err => {
+        this.presentToast('Ocorreu um erro ao carregar suas Receitas e Despesas. Por favor, reinicie o app.', 'bottom', 3000);
+        console.log(err);
+      })
   }
 
   setNextTransactionId(walletId: number, id: number) {
@@ -136,23 +140,23 @@ export class AddTransactionPage implements OnInit {
 
   getNextTransactionId(walletId: number) {
     this.storage.get(`Wallet ${walletId} Next Transaction id`)
-                .then(val => {
-                  if(val != null) {
-                    this.nextId = val;
-                    console.log(this.nextId);
-                  }
-                })
+      .then(val => {
+        if (val != null) {
+          this.nextId = val;
+          console.log(this.nextId);
+        }
+      })
   }
 
   getWallet(id: number) {
     this.storage.get(`Wallet ${id}`)
-                .then(val => {
-                  this.wallet = val;
-                })
-                .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
-                  console.log(err);
-                })
+      .then(val => {
+        this.wallet = val;
+      })
+      .catch(err => {
+        this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
+        console.log(err);
+      })
   }
 
   setWallet(id: number, wallet: Wallet) {
