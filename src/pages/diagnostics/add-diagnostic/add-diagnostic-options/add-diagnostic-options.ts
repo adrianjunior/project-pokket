@@ -21,6 +21,7 @@ export class AddDiagnosticOptionsPage {
 
   addDiagnosticItemPage: string = `AddDiagnosticItemPage`
   diagnosticItemProfilePage: string = `DiagnosticItemProfilePage`
+  diagnosticsItemsPage: string = `DiagnosticItemsPage`
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public popoverCtrl: PopoverController, private storage: Storage,
@@ -50,6 +51,18 @@ export class AddDiagnosticOptionsPage {
       isIncome: isIncome,
       id: this.diagnosticId
     });
+  }
+
+  goToWalletItemsList() {
+    this.navCtrl.push(this.walletExtractPage, {
+      id: this.walletId
+    })
+  }
+
+  goToEditDiagnostic() {
+    this.navCtrl.push(this.editWalletPage, {
+      id: this.walletId
+    })
   }
 
   presentToast(message: string, position: string, duration: number) {
