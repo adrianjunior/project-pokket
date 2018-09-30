@@ -16,6 +16,7 @@ export class WalletProfilePage {
   addTransactionPage: string = `AddTransactionPage`;
   transactionProfilePage: string = `TransactionProfilePage`;
   walletExtractPage: string = `WalletExtractPage`;
+  editWalletPage: string = `EditWalletPage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -60,7 +61,7 @@ export class WalletProfilePage {
   }
 
   goToEditWallet() {
-    this.navCtrl.push(this.walletExtractPage, {
+    this.navCtrl.push(this.editWalletPage, {
       id: this.walletId
     })
   }
@@ -111,8 +112,10 @@ export class WalletProfilePage {
     this.storage.get(`Wallet ${walletId} Transaction ${id}`)
                 .then(val => {
                   console.log(val)
-                  val.date = moment(val.date).locale('pt-br').format('L');
-                  this.transactions.push(val)
+                  if(val != null) {
+                    val.date = moment(val.date).locale('pt-br').format('L');
+                    this.transactions.push(val)
+                  }
                 })
   }
 }

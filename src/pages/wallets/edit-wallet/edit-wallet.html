@@ -18,8 +18,10 @@
       <ion-input type="number" formControlName="balance" name="balance"></ion-input>
     </ion-item>
   </form>
-  <button class="btn-add" ion-button block outline (click)="setWallet(formGroup.value, true)">
-    Salvar Mudanças</button>
-  <button class="btn-add" ion-button block outline (click)="deleteWallet(formGroup.value, false)">
-    Excluir Carteira</button>
+  <div class="btn-container">
+    <button class="btn-add" ion-button block outline (click)="editWallet(formGroup.value)">
+      Salvar Mudanças</button>
+    <button color="danger" class="btn-add" ion-button block outline (click)="deleteWallet()">
+      Excluir Carteira</button>
+  </div>
 </ion-content>

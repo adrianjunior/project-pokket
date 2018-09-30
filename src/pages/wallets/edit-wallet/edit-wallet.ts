@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import { Wallet } from '../../../models/wallet.interface';
 import { Transaction } from '../../../models/transaction.interface';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -14,20 +15,53 @@ import { Transaction } from '../../../models/transaction.interface';
 export class EditWalletPage implements OnInit {
 
   walletId: number;
-  wallet: Wallet = {
-    id: 0,
-    name: '',
-    balance: 0
-  };
+  wallet: Wallet;
+  transactionsIds: number[];
+  firstTransaction: Transaction;
+
+  // Form Items
+  name: string;
+  balance: number;
+  formGroup: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public popoverCtrl: PopoverController, private storage: Storage,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController, public formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
+    this.wallet = {
+      id: 0,
+      name: '',
+      balance: 0
+    };
+    this.transactionsIds = [];
     this.walletId = this.navParams.get('id');
     this.getWallet(this.walletId);
+    this.formGroup = this.formBuilder.group({
+      'name': ['', Validators.required],
+      'balance': [null, Validators.required],
+    });
+  }
+
+  editWallet(formValue: any) {
+    this.wallet.name = formValue.name;
+    if(this.firstTransaction != null) {
+      this.wallet.balance = this.wallet.balance + (Number(formValue.balance) - this.firstTransaction.value)
+      this.firstTransaction.value = Number(formValue.balance);
+    } else {
+      this.transactionsIds.reverse().push(0);
+      this.transactionsIds.reverse();
+      this.firstTransaction = {
+        id: 0,
+        name: 'Valor Inicial',
+        value: Number(formValue.balance),
+        date: moment().format('YYYY-MM-DD'),
+        wallet: this.walletId
+      }
+      this.wallet.balance = this.wallet.balance + Number(formValue.balance)
+    }
+    this.setWallet(this.walletId, this.firstTransaction)
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -48,24 +82,94 @@ export class EditWalletPage implements OnInit {
                 .then(val => {
                   this.wallet = val;
                 })
+                .then(() => {
+                  this.getWalletTransactions(id);
+                })
+                .then(() => {
+                  this.getWalletFirstTransaction(id);
+                })
                 .catch(err => {
                   this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }
 
-  setWallet() {
+  getWalletTransactions(walletId: number) {
+    this.storage.get(`Wallet ${walletId} Transactions`)
+                .then(val => {
+                  if(val != null) {
+                    this.transactionsIds = val;
+                  }
+                })
+  }
 
+  getWalletFirstTransaction(walletId: number) {
+    this.storage.get(`Wallet ${walletId} Transaction 0`)
+                .then(val => {
+                  this.firstTransaction = val;
+                  if (this.firstTransaction != null) {
+                    this.formGroup = this.formBuilder.group({
+                      'name': [this.wallet.name, Validators.required],
+                      'balance': [this.firstTransaction.value, Validators.required],
+                    });
+                  } else {
+                    this.formGroup = this.formBuilder.group({
+                      'name': [this.wallet.name, Validators.required],
+                      'balance': [null, Validators.required],
+                    });
+                  }
+                })
+  }
+
+  setWallet(id: number, transaction: Transaction) {
+    this.storage.set(`Wallet ${id}`, this.wallet)
+                .then(() => {
+                  if(transaction != null) {
+                    this.setFirstTransaction(id, transaction)
+                  }
+                })
+                .then(() => {
+                  if(transaction != null) {
+                    this.setWalletTransactions(id, this.transactionsIds)
+                  }
+                })
+                .then(() => {
+                  this.navCtrl.pop();
+                })
+  }
+
+  setFirstTransaction(id: number, transaction: Transaction) {
+    this.storage.set(`Wallet ${id} Transaction 0`, transaction)
+  }
+
+  setWalletTransactions(id: number, transactions: number[]) {
+    this.storage.set(`Wallet ${id} Transactions`, transactions)
   }
 
   deleteWallet(id: number) {
     this.storage.remove(`Wallet ${id}`)
                 .then(() => {
-                  this.storage.remove(`Wallet ${id} Next id`)
+                  this.deleteWalletTransactionNextId(id);
                 })
                 .then(() => {
-
+                  this.deleteWalletTransactionsIds(id);
+                })
+                .then(() => {
+                  this.transactionsIds.forEach(transactionId => {
+                    this.deleteTransaction(id, transactionId);
+                  })
                 })
   }
 
+  deleteWalletTransactionNextId(walletId: number) {
+    this.storage.remove(`Wallet ${walletId} Next id`)
+  }
+
+  deleteWalletTransactionsIds(walletId: number) {
+    this.storage.remove(`Wallet ${walletId} Transactions`)
+  }
+
+  deleteTransaction(walletId: number, transactionId:number) {
+    this.storage.remove(`Wallet ${walletId} Transaction ${transactionId}`);
+  }
 }
