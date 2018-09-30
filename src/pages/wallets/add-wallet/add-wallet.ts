@@ -114,7 +114,7 @@ export class AddWalletPage implements OnInit {
     this.firstTransaction = {
       id: 0,
       name: 'Valor Inicial',
-      value: value,
+      value: Number(value.toFixed(2)),
       date: moment().format('YYYY-MM-DD'),
       wallet: id
     }
