@@ -150,7 +150,7 @@ export class AddWalletPage implements OnInit {
         if (val != null) {
           this.nextId = val;
         } else {
-          this.nextId = 1;
+          this.nextId = 0;
         }
         console.log((this.nextId));
       })

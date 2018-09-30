@@ -60,7 +60,7 @@ export class TransactionProfilePage {
       'value': [null, Validators.required],
       'date': ['', Validators.required],
       'category': [''],
-      'type': [null]
+      'type': [null, Validators.required]
     });
   }
 
@@ -137,7 +137,7 @@ export class TransactionProfilePage {
             'value': [this.transaction.value, Validators.required],
             'date': [this.transaction.date, Validators.required],
             'category': [this.transaction.category],
-            'type': [this.transaction.type]
+            'type': [this.transaction.type, Validators.required]
           });
         }
       })

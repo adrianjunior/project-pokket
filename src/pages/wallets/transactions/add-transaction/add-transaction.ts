@@ -46,7 +46,7 @@ export class AddTransactionPage implements OnInit {
       'value': [null, Validators.required],
       'date': ['', Validators.required],
       'category': [''],
-      'type': [null]
+      'type': [null, Validators.required]
     });
     this.getTransactions(this.walletId);
     this.getNextTransactionId(this.walletId);
