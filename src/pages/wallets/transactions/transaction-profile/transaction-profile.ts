@@ -157,7 +157,11 @@ export class TransactionProfilePage {
                   }
                 })
                 .then(() => {
-                  this.wallet.balance = this.wallet.balance - this.transaction.value;
+                  if(!this.isIncome){
+                    this.wallet.balance = this.wallet.balance - (this.transaction.value*-1);
+                  } else {
+                    this.wallet.balance = this.wallet.balance - this.transaction.value;
+                  }
                   this.setWallet(this.walletId, this.wallet);
                 })
                 .then(() => {

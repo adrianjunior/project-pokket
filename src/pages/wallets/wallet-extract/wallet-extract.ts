@@ -8,14 +8,10 @@ import { Transaction } from '../../../models/transaction.interface';
 
 @IonicPage()
 @Component({
-  selector: 'page-wallet-profile',
-  templateUrl: 'wallet-profile.html',
+  selector: 'page-wallet-extract',
+  templateUrl: 'wallet-extract.html',
 })
-export class WalletProfilePage {
-
-  addTransactionPage: string = `AddTransactionPage`;
-  transactionProfilePage: string = `TransactionProfilePage`;
-  walletExtractPage: string = `WalletExtractPage`;
+export class WalletExtractPage {
 
   walletId: number;
   wallet: Wallet = {
@@ -26,12 +22,14 @@ export class WalletProfilePage {
   transactionsIds: number[] = [];
   transactions: Transaction[] = [];
 
+  transactionProfilePage: string = `TransactionProfilePage`;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public popoverCtrl: PopoverController, private storage: Storage,
-              private toastCtrl: ToastController) {
+    public popoverCtrl: PopoverController, private storage: Storage,
+    private toastCtrl: ToastController) {
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.transactions = [];
     this.transactionsIds = [];
     this.walletId = this.navParams.get('id');
@@ -44,19 +42,6 @@ export class WalletProfilePage {
       transactionId: transactionId,
       walletId: walletId
     });
-  }
-
-  goToAddTransaction(isIncome: boolean) {
-    this.navCtrl.push(this.addTransactionPage, {
-      isIncome: isIncome,
-      id: this.walletId
-    });
-  }
-  
-  goToWalletExtract() {
-    this.navCtrl.push(this.walletExtractPage, {
-      id: this.walletId
-    })
   }
 
   presentToast(message: string, position: string, duration: number) {
