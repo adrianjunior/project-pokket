@@ -1,6 +1,6 @@
 <ion-header no-border>
   <ion-navbar color="light">
-    <ion-title>{{transaction.name}}</ion-title>
+    <ion-title>Editar {{whatIs}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -33,12 +33,12 @@
     </ion-item>
     <br>
     <div *ngIf="isIncome == true">
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Receita e adicionar outra</button>
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Receita e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="setTransaction(formGroup.value)">Salvar Receita</button>
+      <button color="danger" class="btn-add" ion-button block outline (click)="deleteTransaction()">Excluir Receita</button>
     </div>
     <div *ngIf="isIncome == false">
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Despesa e adicionar outra</button>
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Despesa e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="setTransaction(formGroup.value)">Salvar Despesa</button>
+      <button color="danger" class="btn-add" ion-button block outline (click)="deleteTransaction()">Excluir Despesa</button>
     </div>
   </form>
 </ion-content>

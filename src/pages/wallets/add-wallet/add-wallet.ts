@@ -58,7 +58,7 @@ export class AddWalletPage implements OnInit {
     let wallet: Wallet = {
       id: this.nextId,
       name: formValue.name,
-      balance: parseFloat(formValue.balance)
+      balance: Number(Number(formValue.balance).toFixed(2))
     };
     this.storage.set(`Wallet ${wallet.id}`, wallet)
                   .then(() => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import moment from 'moment';
 
 import { Wallet } from '../../../models/wallet.interface';
 import { Transaction } from '../../../models/transaction.interface';
@@ -100,6 +101,8 @@ export class WalletProfilePage {
   getTransaction(id: number, walletId: number) {
     this.storage.get(`Wallet ${walletId} Transaction ${id}`)
                 .then(val => {
+                  console.log(val)
+                  val.date = moment(val.date).lang('pt-br').format('L');
                   this.transactions.push(val)
                 })
   }

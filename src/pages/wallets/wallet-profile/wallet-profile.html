@@ -12,8 +12,8 @@
 <ion-content padding>
   <header class="wallet-header">
     <h1 text-center>Saldo:
-      <span ion-text *ngIf="wallet.balance >= 0">R${{wallet.balance}}</span>
-      <span ion-text *ngIf="wallet.balance < 0" color="danger">-R${{wallet.balance}}</span>
+      <span ion-text *ngIf="wallet.balance >= 0">R${{wallet.balance.toFixed(2).toString().replace(".", ",")}}</span>
+      <span ion-text *ngIf="wallet.balance < 0" color="danger">-R${{wallet.balance.toFixed(2).toString().replace(".", ",").replace("-", "")}}</span>
     </h1>
   </header>
   <div class="wallet-transactions-header">
@@ -47,8 +47,8 @@
               <p ion-text text-center color="primary" *ngIf="transaction.name.length <= 17">{{transaction.name}}</p>
             </ion-col>
             <ion-col col-3>
-              <p ion-text text-center color="primary" *ngIf="transaction.value >= 0">R${{transaction.value}}</p>
-              <p ion-text text-center color="primary" *ngIf="transaction.value < 0" color="danger">-R${{transaction.value}}</p>
+              <p ion-text text-center color="primary" *ngIf="transaction.value >= 0">R${{transaction.value.toFixed(2).toString().replace(".", ",")}}</p>
+              <p ion-text text-center color="primary" *ngIf="transaction.value < 0" color="danger">-R${{transaction.value.toFixed(2).toString().replace(".", ",").replace("-", "")}}</p>
             </ion-col>
           </ion-row>
         </ion-grid>

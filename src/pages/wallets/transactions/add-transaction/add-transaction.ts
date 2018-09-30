@@ -74,7 +74,7 @@ export class AddTransactionPage implements OnInit {
   addTransaction(formValue: any, addMore: boolean) {
     let date: string = formValue.date;
     date = moment(date).format('YYYY-MM-DD');
-    let value: number = eval(formValue.value);
+    let value: number = Number(Number(formValue.value).toFixed(2));
     if (value > 0) {
       if (!this.isIncome) {
         value = value * -1;
@@ -82,7 +82,7 @@ export class AddTransactionPage implements OnInit {
       let transaction: Transaction = {
         id: this.nextId,
         name: formValue.name,
-        value: value,
+        value: Number(value.toFixed(2)),
         date: date,
         wallet: this.walletId
       }
@@ -119,7 +119,7 @@ export class AddTransactionPage implements OnInit {
           console.log(err);
         })
     } else {
-      this.presentToast('O valor não pode ser 0.', 'bottom', 3000);
+      this.presentToast('O valor não pode ser 0 ou menor.', 'bottom', 3000);
     }
   }
 
