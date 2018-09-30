@@ -59,6 +59,12 @@ export class WalletProfilePage {
     })
   }
 
+  goToEditWallet() {
+    this.navCtrl.push(this.walletExtractPage, {
+      id: this.walletId
+    })
+  }
+
   presentToast(message: string, position: string, duration: number) {
     let toast = this.toastCtrl.create({
       message: message,
