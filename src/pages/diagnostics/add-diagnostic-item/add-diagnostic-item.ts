@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import moment from 'moment';
 
-import { Diagnostic } from '../../../models/diagnostic.interface';
 import { Item } from '../../../models/item.inferface'
 
 @IonicPage()
