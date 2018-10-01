@@ -9,13 +9,13 @@
 
 <ion-content padding>
   <form [formGroup]="formGroup" id="formGroup">
-    <h2>Primeiro Passo: Dê um nome para seu Diagnóstico.</h2>
+    <h2>Dê um nome para seu Diagnóstico.</h2>
     <p>Exemplos: 'Diagnóstico de Janeiro', 'Diagnóstico do Primeiro Trimestre'...</p>
     <ion-item>
       <ion-label floating>Nome do Diagnóstico</ion-label>
       <ion-input type="text" formControlName="name" name="name"></ion-input>
     </ion-item>
-    <button class="btn-add" ion-button block outline (click)="goToDiagnosticOptions(formGroup.value)">
+    <button class="btn-add" ion-button block outline (click)="addDiagnostic(formGroup.value)">
       Salvar Diagnóstico e Continuar</button>
   </form>
 </ion-content>

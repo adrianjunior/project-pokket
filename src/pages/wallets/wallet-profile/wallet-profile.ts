@@ -24,8 +24,8 @@ export class WalletProfilePage {
     name: '',
     balance: 0
   };
-  transactionsIds: number[];
-  transactions: Transaction[];
+  transactionsIds: number[] = [];
+  transactions: Transaction[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public popoverCtrl: PopoverController, private storage: Storage,

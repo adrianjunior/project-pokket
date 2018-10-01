@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import moment from 'moment';
 
 import { Diagnostic } from '../../../models/diagnostic.interface';
 
@@ -13,6 +14,7 @@ export class MyDiagnosticsPage {
 
   addDiagnosticPage: string = `AddDiagnosticPage`;
   diagnosticProfilePage: string = `DiagnosticProfilePage`;
+  diagnosticResultsPage: string = `DiagnosticResultsPage`;
 
   diagnosticsIds: number[];
   diagnostics: Diagnostic[];
@@ -30,10 +32,16 @@ export class MyDiagnosticsPage {
     this.diagnostics = [];
   }
 
-  goToDiagnostic(id: number) {
-    this.navCtrl.push(this.diagnosticProfilePage, {
-      id: id
-    });
+  goToDiagnostic(diagnostic: Diagnostic) {
+    if(diagnostic.isConcluded) {
+      this.navCtrl.push(this.diagnosticResultsPage, {
+        id: diagnostic.id
+      });
+    } else {
+      this.navCtrl.push(this.diagnosticProfilePage, {
+        id: diagnostic.id
+      });
+    }
   }
 
   goToAddDiagnostic() {
@@ -75,6 +83,9 @@ export class MyDiagnosticsPage {
   getDiagnostic(id: number) {
     this.storage.get(`Diagnostic ${id}`)
                 .then(val => {
+                  if(val != null) {
+                    val.date = moment(val.date).locale('pt-br').format('L');
+                  }
                   this.diagnostics.push(val);
                   console.log(this.diagnostics);
                 })

@@ -17,7 +17,7 @@
     <br> Parece que você ainda não possui um Diagnóstico.
     <br> Crie um Diagnóstico clicando no botão de '+' ali em cima para ver sua situação financeira!</p>
   <ion-list>
-    <ion-card ion-item class="diagnostic-card" *ngFor="let diagnostic of diagnostics; let i = index" (click)="goToWallet(wallet.id)">
+    <ion-card ion-item class="diagnostic-card" *ngFor="let diagnostic of diagnostics; let i = index" (click)="goToDiagnostic(diagnostic)">
       <h1 text-center ion-text color="primary">{{diagnostic.name}}</h1>
       <br>
       <h2 ion-text color="primary">Data do Diagnóstico: {{diagnostic.date}}</h2>

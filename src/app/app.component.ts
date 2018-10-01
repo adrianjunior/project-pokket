@@ -20,7 +20,7 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'cash' },
-      { title: 'Meus Diagnósticos', component: `MyWalletsPage`, icon: 'clipboard' },
+      { title: 'Meus Diagnósticos', component: `MyDiagnosticsPage`, icon: 'clipboard' },
       { title: 'Meu Histórico', component: `MyWalletsPage`, icon: 'trending-up' },
       { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open' },
       { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done' },

@@ -20,7 +20,7 @@ export class AddDiagnosticPage implements OnInit {
   name: string;
   formGroup: FormGroup;
 
-  addDiagnosticOptionsPage: string = `AddDiagnosticOptionsPage`;
+  diagnosticProfilePage: string = `DiagnosticProfilePage`;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage, public formBuilder: FormBuilder,
@@ -51,7 +51,8 @@ export class AddDiagnosticPage implements OnInit {
       let diagnostic: Diagnostic = {
         id: this.nextId,
         name: formValue.name,
-        date: moment().format('YYYY-MM-DD')
+        date: moment().format('YYYY-MM-DD'),
+        isConcluded: false
       }
       this.storage.set(`Diagnostic ${this.nextId}`, diagnostic)
                   .then(() => {
@@ -63,7 +64,8 @@ export class AddDiagnosticPage implements OnInit {
                     this.setDiagnosticsIds(this.diagnosticsIds);
                   })
                   .then(() => {
-                    this.navCtrl.push(this.addDiagnosticOptionsPage, {
+                    this.navCtrl.pop();
+                    this.navCtrl.push(this.diagnosticProfilePage, {
                       id: this.diagnosticsIds
                     })
                   })

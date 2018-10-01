@@ -17,6 +17,7 @@ export class EditWalletPage implements OnInit {
   walletId: number;
   wallet: Wallet;
   transactionsIds: number[];
+  walletsIds: number[];
   firstTransaction: Transaction;
 
   // Form Items
@@ -36,8 +37,10 @@ export class EditWalletPage implements OnInit {
       balance: 0
     };
     this.transactionsIds = [];
+    this.walletsIds = [];
     this.walletId = this.navParams.get('id');
     this.getWallet(this.walletId);
+    this.getWalletsIds();
     this.formGroup = this.formBuilder.group({
       'name': ['', Validators.required],
       'balance': [null, Validators.required],
@@ -121,6 +124,13 @@ export class EditWalletPage implements OnInit {
                 })
   }
 
+  getWalletsIds() {
+    this.storage.get('WalletsIds')
+                .then(val => {
+                  this.walletsIds = val;
+                })
+  }
+
   setWallet(id: number, transaction: Transaction) {
     this.storage.set(`Wallet ${id}`, this.wallet)
                 .then(() => {
@@ -146,7 +156,7 @@ export class EditWalletPage implements OnInit {
     this.storage.set(`Wallet ${id} Transactions`, transactions)
   }
 
-  deleteWallet(id: number) {
+  deleteWallet(id: number = this.walletId) {
     this.storage.remove(`Wallet ${id}`)
                 .then(() => {
                   this.deleteWalletTransactionNextId(id);
@@ -158,6 +168,20 @@ export class EditWalletPage implements OnInit {
                   this.transactionsIds.forEach(transactionId => {
                     this.deleteTransaction(id, transactionId);
                   })
+                })
+                .then(() => {
+                  const index = this.walletsIds.indexOf(this.walletId);
+                  console.log(`INDEX ==> ${index}`);
+                  console.log(`WALLETSIDS ==> ${this.walletsIds}`);
+                  console.log(`WALLETID ==> ${this.walletId}`)
+                  if(index > -1) {
+                    this.walletsIds.splice(index, 1)
+                    console.log(`WALLETSIDS 2 ==> ${this.walletsIds}`);
+                    this.setWalletsIds(this.walletsIds);
+                  }
+                })
+                .then(() => {
+                  this.navCtrl.popToRoot();
                 })
   }
 
@@ -171,5 +195,9 @@ export class EditWalletPage implements OnInit {
 
   deleteTransaction(walletId: number, transactionId:number) {
     this.storage.remove(`Wallet ${walletId} Transaction ${transactionId}`);
+  }
+
+  setWalletsIds(walletsIds: number[]) {
+    this.storage.set('WalletsIds', walletsIds);
   }
 }
