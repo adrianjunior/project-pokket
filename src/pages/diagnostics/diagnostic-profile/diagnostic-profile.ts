@@ -57,18 +57,18 @@ export class DiagnosticProfilePage {
 
   goToDiagnosticItemsList() {
     this.navCtrl.push(this.diagnosticsItemsPage, {
-      id: this.diagnosticsItemsPage
+      id: this.diagnosticId
     })
   }
 
   goToEditDiagnostic() {
     this.navCtrl.push(this.editDiagnosticPage, {
-      id: this.editDiagnosticPage
+      id: this.diagnosticId
     })
   }
 
   concludeDiagnostic() {
-
+    
   }
 
   presentToast(message: string, position: string, duration: number) {

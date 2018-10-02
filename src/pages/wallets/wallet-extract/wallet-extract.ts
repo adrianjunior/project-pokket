@@ -63,7 +63,7 @@ export class WalletExtractPage {
                   this.wallet = val;
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar suas Carteiras. Por favor, reinicie o app.', 'bottom', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar suas Receitas e Despesas. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }
@@ -81,7 +81,7 @@ export class WalletExtractPage {
                   })
                 })
                 .catch(err => {
-                  this.presentToast('Ocorreu um erro ao carregar sua Carteira. Por favor, reinicie o app.', 'bottom', 3000);
+                  this.presentToast('Ocorreu um erro ao carregar sua Receitas e Despesas. Por favor, reinicie o app.', 'bottom', 3000);
                   console.log(err);
                 })
   }

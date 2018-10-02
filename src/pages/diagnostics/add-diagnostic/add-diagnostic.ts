@@ -66,7 +66,7 @@ export class AddDiagnosticPage implements OnInit {
                   .then(() => {
                     this.navCtrl.pop();
                     this.navCtrl.push(this.diagnosticProfilePage, {
-                      id: this.diagnosticsIds
+                      id: this.nextId-1
                     })
                   })
                   .catch(err => {
@@ -106,7 +106,7 @@ export class AddDiagnosticPage implements OnInit {
           if (val != null) {
             this.nextId = val;
           } else {
-            this.nextId = 1;
+            this.nextId = 0;
           }
           console.log((this.nextId));
         })

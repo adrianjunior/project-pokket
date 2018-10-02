@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import moment from 'moment';
 
 import { Wallet } from '../../../models/wallet.interface';
 import { Transaction } from '../../../models/transaction.interface';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({

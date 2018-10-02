@@ -4,6 +4,11 @@
       <ion-icon name="menu" color="primary"></ion-icon>
     </button>
     <ion-title>{{diagnostic.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary" (click)="goToEditDiagnostic()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -32,8 +37,10 @@
               <p ion-text text-center color="primary" *ngIf="item.name.length <= 17">{{item.name}}</p>
             </ion-col>
             <ion-col col-6>
-              <p ion-text text-center color="primary" *ngIf="item.value >= 0">R${{item.value.toFixed(2).toString().replace(".", ",")}}</p>
-              <p ion-text text-center color="primary" *ngIf="item.value < 0" color="danger">-R${{item.value.toFixed(2).toString().replace(".", ",").replace("-", "")}}</p>
+              <p ion-text text-center color="primary" *ngIf="item.value >= 0">R${{item.value.toFixed(2).toString().replace(".",
+                ",")}}</p>
+              <p ion-text text-center color="primary" *ngIf="item.value < 0" color="danger">-R${{item.value.toFixed(2).toString().replace(".",
+                ",").replace("-", "")}}</p>
             </ion-col>
           </ion-row>
         </ion-grid>
