@@ -1,18 +1,36 @@
-<!--
-  Generated template for the DiagnosticResultsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>diagnostic-results</ion-title>
+<ion-header no-border>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>Resultados {{diagnostic.name}}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+  <ion-item>
+    <ion-label>Seção</ion-label>
+    <ion-select [(ngModel)]="section" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectSection()" interface="popover">
+      <ion-option value="0">Diagnóstico Geral</ion-option>
+      <ion-option value="1">Receitas</ion-option>
+      <ion-option value="2">Despesas</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="isExpense == true">
+    <ion-label>Tipo de Despesa</ion-label>
+    <ion-select [(ngModel)]="expenseType" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectExpenseType()"
+      interface="popover">
+      <ion-option value="0">Geral</ion-option>
+      <ion-option value="1">Fixo Obrigatório</ion-option>
+      <ion-option value="2">Fixo Não-Obrigatório</ion-option>
+      <ion-option value="3">Variável Obrigatório</ion-option>
+      <ion-option value="4">Variável Não-Obrigatório</ion-option>
+    </ion-select>
+  </ion-item>
 
+  <p *ngIf="hasData == false">Você não possui Dados nesta seção.</p>
+
+  <div class="chart">
+    <canvas #chart></canvas>
+  </div>
 </ion-content>

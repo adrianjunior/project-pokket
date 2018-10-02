@@ -1,23 +1,23 @@
 <ion-header no-border>
-    <ion-navbar color="light">
-      <button ion-button menuToggle>
-        <ion-icon name="menu" color="primary"></ion-icon>
-      </button>
-      <ion-title>Editar {{diagnostic.name}}</ion-title>
-    </ion-navbar>
-  </ion-header>
-  
-  <ion-content padding>
-    <form [formGroup]="formGroup" id="formGroup">
-      <ion-item>
-        <ion-label floating>Nome do Diagnóstico</ion-label>
-        <ion-input type="text" formControlName="name" name="name"></ion-input>
-      </ion-item>
-    </form>
-    <div class="btn-container">
-      <button class="btn-add" ion-button block outline (click)="setDiagnostic(formGroup.value)">
-        Salvar Mudanças</button>
-      <button color="danger" class="btn-add" ion-button block outline (click)="deleteDiagnostic()">
-        Excluir Diagnóstico</button>
-    </div>
-  </ion-content>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>Editar {{diagnostic.name}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formGroup" id="formGroup">
+    <ion-item>
+      <ion-label floating>Nome do Diagnóstico</ion-label>
+      <ion-input type="text" formControlName="name" name="name"></ion-input>
+    </ion-item>
+  </form>
+  <div class="btn-container">
+    <button class="btn-add" ion-button block outline (click)="setDiagnostic(formGroup.value)">
+      Salvar Mudanças</button>
+    <button color="danger" class="btn-add" ion-button block outline (click)="deleteDiagnostic()">
+      Excluir Diagnóstico</button>
+  </div>
+</ion-content>
