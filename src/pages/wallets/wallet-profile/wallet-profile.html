@@ -16,9 +16,15 @@
       <span ion-text *ngIf="wallet.balance < 0" color="danger">-R${{wallet.balance.toFixed(2).toString().replace(".", ",").replace("-", "")}}</span>
     </h1>
   </header>
+  <div class="buttons">
+    <button class="btn-add" ion-button block outline (click)="goToAddTransaction(true)">
+      Adicionar Receita</button>
+    <button class="btn-add" ion-button block outline (click)="goToAddTransaction(false)">
+      Adicionar Despesa</button>
+  </div>
   <div class="wallet-transactions-header">
-    <h2 text-center>Extrato da Carteira</h2>
-    <ion-grid *ngIf="transactionsIds.length > 0">
+    <h3 text-center>Extrato da Carteira</h3>
+    <ion-grid  *ngIf="transactionsIds.length > 0">
       <ion-row>
         <ion-col col-3>
           <p ion-text text-center>Data</p>
@@ -35,8 +41,7 @@
   </div>
   <div class="wallet-transactions">
     <ion-list no-lines>
-      <button ion-item class="transaction-item" *ngFor="let transaction of transactions.slice(-5).reverse(); let i = index"
-              (click)="goToTransactionProfile(transaction.id)">
+      <button ion-item class="transaction-item" *ngFor="let transaction of transactions.reverse(); let i = index" (click)="goToTransactionProfile(transaction.id)">
         <ion-grid>
           <ion-row>
             <ion-col col-3>
@@ -53,15 +58,6 @@
           </ion-row>
         </ion-grid>
       </button>
-      <button ion-button block clear (click)="goToWalletExtract()" *ngIf="transactions.length > 0">
-        Ver Extrato Completo
-      </button>
-    </ion-list>    
-  </div>
-  <div class="buttons">
-    <button class="btn-add" ion-button block outline (click)="goToAddTransaction(true)">
-      Adicionar Receita</button>
-    <button class="btn-add" ion-button block outline (click)="goToAddTransaction(false)">
-      Adicionar Despesa</button>
+    </ion-list>
   </div>
 </ion-content>

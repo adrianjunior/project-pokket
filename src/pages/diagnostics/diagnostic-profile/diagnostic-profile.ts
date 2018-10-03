@@ -69,9 +69,15 @@ export class DiagnosticProfilePage {
   }
 
   concludeDiagnostic() {
-    this.navCtrl.push(this.diagnosticResultsPage, {
-      diagnosticId: this.diagnosticId
-    })
+    if(this.diagnostic.isConcluded == false) {
+      this.diagnostic.isConcluded = true;
+      this.setDiagnostic(this.diagnosticId, this.diagnostic);
+      this.navCtrl.push(this.diagnosticResultsPage, {
+        diagnosticId: this.diagnosticId
+      })
+    } else {
+      this.navCtrl.pop();
+    }
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -126,4 +132,7 @@ export class DiagnosticProfilePage {
                 })
   }
 
+  setDiagnostic(diagnosticId: number, diagnostic: Diagnostic) {
+    this.storage.set(`Diagnostic ${diagnosticId}`, diagnostic);
+  }
 }

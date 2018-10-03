@@ -26,7 +26,7 @@ export class DiagnosticResultsPage implements OnInit {
   section: number;
   expenseType: number;
 
-  haveData: boolean;
+  hasData: boolean;
   isEditable: boolean;
   isExpense: boolean;
 
@@ -34,6 +34,8 @@ export class DiagnosticResultsPage implements OnInit {
   diagnostic: Diagnostic;
   itemsIds: number[];
   items: Item[];
+
+  diagnosticProfilePage: string = `DiagnosticProfilePage`;
 
   constructor(public navCtrl: NavController, private storage: Storage,
     private navParams: NavParams, public appCtrl: App, public toastCtrl: ToastController,
@@ -47,6 +49,7 @@ export class DiagnosticResultsPage implements OnInit {
       date: '',
       isConcluded: false
     }
+    this.hasData = false;
     this.section = 0;
     this.expenseType = 0;
     this.isExpense = false;
@@ -60,10 +63,12 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    
+    this.getDiagnostic(this.diagnosticId);
+    this.getDiagnosticItems(this.diagnosticId, true, 0);
   }
 
   createChart(categoryName: string) {
+    console.log('CREATE CHART')
     Chart.defaults.global.legend.position = 'top';
     console.log(...this.chartLabels);
     console.log(...this.chartData);
@@ -110,32 +115,27 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   onSelectSection() {
-    console.log(this.section)
-    switch (this.section) {
-      // Tudo
-      case 0:
-        this.isEditable = false;
-        this.isExpense = false;
-        this.getDiagnosticItems(this.diagnosticId, true, 0);
-        break;
-      // Receitas
-      case 1:
-        this.isEditable = true;
-        this.isExpense = false;
-        this.expenseType = 0;
-        this.getDiagnosticItems(this.diagnosticId, false, 0);
-        break;
-      // Despesas
-      case 2:
-        this.isEditable = false;
-        this.isExpense = true;
-        this.getDiagnosticItems(this.diagnosticId, true, 1);
-        break;
+    if(this.section == 0) {
+      this.isEditable = false;
+      this.isExpense = false;
+      console.log(this.isExpense)
+      this.getDiagnosticItems(this.diagnosticId, true, 0);
+    } else if (this.section == 1) {
+      this.isEditable = true;
+      this.isExpense = false;
+      console.log('this.isExpense')
+      this.getDiagnosticItems(this.diagnosticId, false, 0);
+    } else if (this.section == 2) {
+      this.isEditable = false;
+      this.isExpense = true;
+      this.expenseType = 0;
+      console.log(this.isExpense)
+      this.getDiagnosticItems(this.diagnosticId, true, 1);
     }
   }
 
   onSelectExpenseType() {
-    if(this.expenseType > 0) {
+    if (this.expenseType > 0) {
       this.isEditable = true;
       this.getDiagnosticItems(this.diagnosticId, false, this.expenseType);
     } else {
@@ -148,10 +148,10 @@ export class DiagnosticResultsPage implements OnInit {
     let values: number[] = [];
     let names: string[] = [];
     items.filter(item => {
-      if(type == 0) {
-        item.value > 0;
+      if (type == 0) {
+        return item.value > 0;
       } else if (type <= 4) {
-        item.type == type;
+        return item.type == type;
       }
     }).forEach(item => {
       values.push(item.value);
@@ -160,49 +160,39 @@ export class DiagnosticResultsPage implements OnInit {
     this.chartData = [...values];
     this.chartLabels = [...names];
     let name;
-    switch (type) {
-      case 1:
-        name = 'Receitas;'
-        break;
-      case 2:
-        name = 'Despesas Fixas Obrigatórias'
-        break;
-      case 3:
-        name = 'Despesas Fixas Opcionais'
-        break;
-      case 4:
-        name = 'Despesas Variáveis Obrigatórias'
-        break;
-      case 5:
-        name = 'Despesas Variáveis Opcionais'
-        break;
+    if (type == 1) {
+      name = 'Receitas;'
+    } else if (type == 2) {
+      name = 'Despesas Fixas Obrigatórias'
+    } else if (type == 3) {
+      name = 'Despesas Fixas Opcionais'
+    } else if (type == 4) {
+      name = 'Despesas Variáveis Obrigatórias'
+    } else if (type == 5) {
+      name = 'Despesas Variáveis Opcionais'
     }
     this.createChart(name);
   }
 
   getTypeData(items: Item[], type: number) {
-    console.log(type)
-    if(type == 0) {
+    console.log(type, items)
+    if (type == 0) {
       // Receitas x Despesas
       let incomeSum = 0;
       let expenseSum = 0;
-      const incomeList = items.filter(item => {
-        item.value > 0;
-      })
+      const incomeList = items.filter(item => item.value > 0)
       console.log(...incomeList)
       incomeList.forEach(item => {
         incomeSum += item.value;
         console.log('income ' + item.value)
       })
-      const expenseList = items.filter(item => {
-        item.value < 0;
-      })
+      const expenseList = items.filter(item => item.value < 0)
       console.log(...expenseList)
       expenseList.forEach(item => {
         expenseSum += item.value;
         console.log('expense ' + item.value)
       })
-      this.chartData = [incomeSum, expenseSum*-1];
+      this.chartData = [incomeSum, expenseSum * -1];
       this.chartLabels = ['Receitas', 'Despesas'];
       this.createChart('Receitas e Despesas');
     } else if (type == 1) {
@@ -211,30 +201,32 @@ export class DiagnosticResultsPage implements OnInit {
       let foeSum = 0;
       let vceSum = 0;
       let voeSum = 0;
-      const fce = items.filter(item => {
-        item.type == 1;
-      }).forEach(item => {
-        fceSum += item.value;
-      })
-      const foe = items.filter(item => {
-        item.type == 2;
-      }).forEach(item => {
+      const fce = items.filter(item => item.type == 1)
+        .forEach(item => {
+          fceSum += item.value;
+        })
+      const foe = items.filter(item => item.type == 2)
+        .forEach(item => {
         foeSum += item.value;
       })
-      const vce = items.filter(item => {
-        item.type == 3;
-      }).forEach(item => {
+      const vce = items.filter(item => item.type == 3)
+        .forEach(item => {
         vceSum += item.value;
       })
-      const voe = items.filter(item => {
-        item.type == 4;
-      }).forEach(item => {
+      const voe = items.filter(item => item.type == 4)
+        .forEach(item => {
         voeSum += item.value;
       })
-      this.chartData = [fceSum*-1, foeSum*-1, vceSum*-1, voeSum*-1];
+      this.chartData = [fceSum * -1, foeSum * -1, vceSum * -1, voeSum * -1];
       this.chartLabels = ['Fixa Obrigatória', 'Fixa Opcional', 'Variável Obrigatória', 'Variável Opcional'];
       this.createChart('Despesas');
     }
+  }
+
+  goToDiagnosticProfile() {
+    this.navCtrl.push(this.diagnosticProfilePage, {
+      id: this.diagnosticId
+    })
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -265,10 +257,16 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   getDiagnosticItems(diagnosticId: number, isTypeData: boolean, type: number) {
+    this.items = [];
     this.storage.get(`Diagnostic ${diagnosticId} Items`)
       .then(val => {
         if (val != null) {
           this.itemsIds = val
+          if (this.itemsIds.length <= 0) {
+            this.hasData = false;
+          }
+        } else {
+          this.hasData = false;
         }
         this.itemsIds.forEach(id => {
           this.getDiagnosticItem(diagnosticId, id, isTypeData, type)
@@ -281,14 +279,16 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   getDiagnosticItem(diagnosticId: number, itemId: number, isTypeData: boolean, type: number) {
+    this.hasData = true;
     this.storage.get(`Diagnostic ${diagnosticId} Item ${itemId}`)
       .then(val => {
         if (val != null) {
           this.items.push(val);
         }
         console.log(`ITEMS ${this.items.length} X ${this.itemsIds.length} IDS`)
-        if(this.items.length >= this.itemsIds.length) {
-          if(isTypeData) {
+        if (this.items.length >= this.itemsIds.length) {
+
+          if (isTypeData) {
             this.getTypeData(this.items, type)
           } else {
             this.getItemData(this.items, type)

@@ -4,6 +4,11 @@
       <ion-icon name="menu" color="primary"></ion-icon>
     </button>
     <ion-title>Resultados {{diagnostic.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary" (click)="goToDiagnosticProfile()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -18,13 +23,12 @@
   </ion-item>
   <ion-item *ngIf="isExpense == true">
     <ion-label>Tipo de Despesa</ion-label>
-    <ion-select [(ngModel)]="expenseType" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectExpenseType()"
-      interface="popover">
+    <ion-select [(ngModel)]="expenseType" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectExpenseType()" interface="popover">
       <ion-option value="0">Geral</ion-option>
       <ion-option value="1">Fixo Obrigatório</ion-option>
-      <ion-option value="2">Fixo Não-Obrigatório</ion-option>
+      <ion-option value="2">Fixo Opcional</ion-option>
       <ion-option value="3">Variável Obrigatório</ion-option>
-      <ion-option value="4">Variável Não-Obrigatório</ion-option>
+      <ion-option value="4">Variável Opcional</ion-option>
     </ion-select>
   </ion-item>
 

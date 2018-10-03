@@ -35,7 +35,7 @@ export class MyDiagnosticsPage {
   goToDiagnostic(diagnostic: Diagnostic) {
     if(diagnostic.isConcluded) {
       this.navCtrl.push(this.diagnosticResultsPage, {
-        id: diagnostic.id
+        diagnosticId: diagnostic.id
       });
     } else {
       this.navCtrl.push(this.diagnosticProfilePage, {

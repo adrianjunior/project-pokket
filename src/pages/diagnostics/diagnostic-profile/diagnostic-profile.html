@@ -13,9 +13,17 @@
 </ion-header>
 
 <ion-content padding>
+  <div class="btn-container">
+    <button class="btn-add" ion-button block outline (click)="goToAddItem(true)">
+      Adicionar Receita</button>
+    <button class="btn-add" ion-button block outline (click)="goToAddItem(false)">
+      Adicionar Despesa</button>
+    <button class="btn-add" ion-button block outline (click)="concludeDiagnostic()">
+      Gerar Resultado do Diagnóstico</button>
+  </div>
   <div class="diagnostic-items-header">
-    <h2 text-center>Receitas e Despesas do Diagnóstico</h2>
-    <ion-grid *ngIf="itemsIds.length > 0">
+    <h3 style="margin: 0; padding: 0" text-center>Receitas e Despesas do Diagnóstico</h3>
+    <ion-grid style="margin: 0; padding: 0" *ngIf="itemsIds.length > 0">
       <ion-row>
         <ion-col col-6>
           <p ion-text text-center>Nome</p>
@@ -29,7 +37,7 @@
   </div>
   <div class="diagnostic-items">
     <ion-list no-lines>
-      <button ion-item class="item-item" *ngFor="let item of items.slice(-5).reverse(); let i = index" (click)="goToItemProfile(item.id)">
+      <button ion-item class="item-item" *ngFor="let item of items.reverse(); let i = index" (click)="goToItemProfile(item.id)">
         <ion-grid>
           <ion-row>
             <ion-col col-6>
@@ -37,25 +45,13 @@
               <p ion-text text-center color="primary" *ngIf="item.name.length <= 17">{{item.name}}</p>
             </ion-col>
             <ion-col col-6>
-              <p ion-text text-center color="primary" *ngIf="item.value >= 0">R${{item.value.toFixed(2).toString().replace(".",
-                ",")}}</p>
-              <p ion-text text-center color="primary" *ngIf="item.value < 0" color="danger">-R${{item.value.toFixed(2).toString().replace(".",
-                ",").replace("-", "")}}</p>
+              <p ion-text text-center color="primary" *ngIf="item.value >= 0">R${{item.value.toFixed(2).toString().replace(".", ",")}}
+              </p>
+              <p ion-text text-center color="primary" *ngIf="item.value < 0" color="danger">-R${{item.value.toFixed(2).toString().replace(".", ",").replace("-", "")}}</p>
             </ion-col>
           </ion-row>
         </ion-grid>
       </button>
-      <button ion-button block clear (click)="goToDiagnosticItemsList()" *ngIf="items.length > 0">
-        Ver Lista Completa
-      </button>
     </ion-list>
-  </div>
-  <div class="btn-container">
-    <button class="btn-add" ion-button block outline (click)="goToAddItem(true)">
-      Adicionar Receita</button>
-    <button class="btn-add" ion-button block outline (click)="goToAddItem(false)">
-      Adicionar Despesa</button>
-    <button class="btn-add" ion-button block outline (click)="concludeDiagnostic()">
-      Gerar Resultado do Diagnóstico</button>
   </div>
 </ion-content>
