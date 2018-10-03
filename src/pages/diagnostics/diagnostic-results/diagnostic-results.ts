@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Diagnostic } from '../../../models/diagnostic.interface';
 import { Item } from '../../../models/item.inferface';
 import colors from '../../../assets/data/colors';
+import { isType } from '@angular/core/src/type';
 
 
 @IonicPage()
@@ -40,6 +41,12 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   ngOnInit() {
+    this.diagnostic = {
+      id: 0,
+      name: '',
+      date: '',
+      isConcluded: false
+    }
     this.section = 0;
     this.expenseType = 0;
     this.isExpense = false;
@@ -49,18 +56,17 @@ export class DiagnosticResultsPage implements OnInit {
     this.items = [];
     this.itemsIds = [];
     this.getDiagnostic(this.diagnosticId);
-    this.getDiagnosticItems(this.diagnosticId);
+    this.getDiagnosticItems(this.diagnosticId, true, 0);
   }
 
   ionViewWillEnter() {
-    if (this.section != 0) {
-      this.getDiagnostic(this.diagnosticId);
-      this.getDiagnosticItems(this.diagnosticId);
-    }
+    
   }
 
   createChart(categoryName: string) {
     Chart.defaults.global.legend.position = 'top';
+    console.log(...this.chartLabels);
+    console.log(...this.chartData);
     this.chartEl = new Chart(this.chart.nativeElement, {
       type: this.chartType,
       data: {
@@ -104,67 +110,131 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   onSelectSection() {
+    console.log(this.section)
     switch (this.section) {
+      // Tudo
       case 0:
         this.isEditable = false;
         this.isExpense = false;
-        this.chartType = 'bar';
-        this.getDiagnostic(this.diagnosticId);
-        this.getDiagnosticItems(this.diagnosticId);
+        this.getDiagnosticItems(this.diagnosticId, true, 0);
         break;
+      // Receitas
       case 1:
-        this.categoryNumber = 0;
-        this.category = categories[0];
         this.isEditable = true;
         this.isExpense = false;
         this.expenseType = 0;
-        this.chartType = 'pie';
-        this.getDiagnostic(this.diagnosticId);
-        this.getDiagnosticItems(this.diagnosticId);
+        this.getDiagnosticItems(this.diagnosticId, false, 0);
         break;
+      // Despesas
       case 2:
-        this.isExpense = true;
         this.isEditable = false;
-        this.chartType = 'pie';
-        this.getDiagnostic(this.diagnosticId);
-        this.getDiagnosticItems(this.diagnosticId);
+        this.isExpense = true;
+        this.getDiagnosticItems(this.diagnosticId, true, 1);
         break;
     }
-    console.log(this.category);
   }
 
-  onSelectSpentType() {
-    switch (this.expenseType) {
-      case 0:
-        this.loadData(null, 'Total Spent Values');
-        this.isEditable = false;
-        break;
+  onSelectExpenseType() {
+    if(this.expenseType > 0) {
+      this.isEditable = true;
+      this.getDiagnosticItems(this.diagnosticId, false, this.expenseType);
+    } else {
+      this.isEditable = false;
+      this.getDiagnosticItems(this.diagnosticId, true, 1);
+    }
+  }
+
+  getItemData(items: Item[], type: number) {
+    let values: number[] = [];
+    let names: string[] = [];
+    items.filter(item => {
+      if(type == 0) {
+        item.value > 0;
+      } else if (type <= 4) {
+        item.type == type;
+      }
+    }).forEach(item => {
+      values.push(item.value);
+      names.push(item.name);
+    })
+    this.chartData = [...values];
+    this.chartLabels = [...names];
+    let name;
+    switch (type) {
       case 1:
-        this.categoryNumber = 1;
-        this.category = categories[1];
-        this.loadData(this.categoryNumber, this.category.name);
-        this.isEditable = true;
+        name = 'Receitas;'
         break;
       case 2:
-        this.categoryNumber = 2;
-        this.category = categories[2];
-        this.loadData(this.categoryNumber, this.category.name);
-        this.isEditable = true;
+        name = 'Despesas Fixas Obrigatórias'
         break;
       case 3:
-        this.categoryNumber = 3;
-        this.category = categories[3];
-        this.loadData(this.categoryNumber, this.category.name);
-        this.isEditable = true;
+        name = 'Despesas Fixas Opcionais'
         break;
       case 4:
-        this.categoryNumber = 4;
-        this.category = categories[4];
-        this.loadData(this.categoryNumber, this.category.name);
-        this.isEditable = true;
+        name = 'Despesas Variáveis Obrigatórias'
+        break;
+      case 5:
+        name = 'Despesas Variáveis Opcionais'
         break;
     }
-    console.log(this.category);
+    this.createChart(name);
+  }
+
+  getTypeData(items: Item[], type: number) {
+    console.log(type)
+    if(type == 0) {
+      // Receitas x Despesas
+      let incomeSum = 0;
+      let expenseSum = 0;
+      const incomeList = items.filter(item => {
+        item.value > 0;
+      })
+      console.log(...incomeList)
+      incomeList.forEach(item => {
+        incomeSum += item.value;
+        console.log('income ' + item.value)
+      })
+      const expenseList = items.filter(item => {
+        item.value < 0;
+      })
+      console.log(...expenseList)
+      expenseList.forEach(item => {
+        expenseSum += item.value;
+        console.log('expense ' + item.value)
+      })
+      this.chartData = [incomeSum, expenseSum*-1];
+      this.chartLabels = ['Receitas', 'Despesas'];
+      this.createChart('Receitas e Despesas');
+    } else if (type == 1) {
+      // Tipos de Despesas
+      let fceSum = 0;
+      let foeSum = 0;
+      let vceSum = 0;
+      let voeSum = 0;
+      const fce = items.filter(item => {
+        item.type == 1;
+      }).forEach(item => {
+        fceSum += item.value;
+      })
+      const foe = items.filter(item => {
+        item.type == 2;
+      }).forEach(item => {
+        foeSum += item.value;
+      })
+      const vce = items.filter(item => {
+        item.type == 3;
+      }).forEach(item => {
+        vceSum += item.value;
+      })
+      const voe = items.filter(item => {
+        item.type == 4;
+      }).forEach(item => {
+        voeSum += item.value;
+      })
+      this.chartData = [fceSum*-1, foeSum*-1, vceSum*-1, voeSum*-1];
+      this.chartLabels = ['Fixa Obrigatória', 'Fixa Opcional', 'Variável Obrigatória', 'Variável Opcional'];
+      this.createChart('Despesas');
+    }
   }
 
   presentToast(message: string, position: string, duration: number) {
@@ -194,14 +264,14 @@ export class DiagnosticResultsPage implements OnInit {
       })
   }
 
-  getDiagnosticItems(diagnosticId: number) {
+  getDiagnosticItems(diagnosticId: number, isTypeData: boolean, type: number) {
     this.storage.get(`Diagnostic ${diagnosticId} Items`)
       .then(val => {
         if (val != null) {
           this.itemsIds = val
         }
         this.itemsIds.forEach(id => {
-          this.getDiagnosticItem(diagnosticId, id)
+          this.getDiagnosticItem(diagnosticId, id, isTypeData, type)
         })
       })
       .catch(err => {
@@ -210,11 +280,19 @@ export class DiagnosticResultsPage implements OnInit {
       })
   }
 
-  getDiagnosticItem(diagnosticId: number, itemId: number) {
+  getDiagnosticItem(diagnosticId: number, itemId: number, isTypeData: boolean, type: number) {
     this.storage.get(`Diagnostic ${diagnosticId} Item ${itemId}`)
       .then(val => {
         if (val != null) {
           this.items.push(val);
+        }
+        console.log(`ITEMS ${this.items.length} X ${this.itemsIds.length} IDS`)
+        if(this.items.length >= this.itemsIds.length) {
+          if(isTypeData) {
+            this.getTypeData(this.items, type)
+          } else {
+            this.getItemData(this.items, type)
+          }
         }
       })
   }

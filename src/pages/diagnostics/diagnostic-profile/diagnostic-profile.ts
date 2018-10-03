@@ -27,6 +27,7 @@ export class DiagnosticProfilePage {
   diagnosticItemProfilePage: string = `DiagnosticItemProfilePage`
   diagnosticsItemsPage: string = `DiagnosticItemsPage`
   editDiagnosticPage: string = `EditDiagnosticPage`
+  diagnosticResultsPage: string = `DiagnosticResultsPage`
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public popoverCtrl: PopoverController, private storage: Storage,
@@ -68,7 +69,9 @@ export class DiagnosticProfilePage {
   }
 
   concludeDiagnostic() {
-    
+    this.navCtrl.push(this.diagnosticResultsPage, {
+      diagnosticId: this.diagnosticId
+    })
   }
 
   presentToast(message: string, position: string, duration: number) {
