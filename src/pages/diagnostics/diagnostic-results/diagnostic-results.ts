@@ -8,7 +8,6 @@ import { Diagnostic } from '../../../models/diagnostic.interface';
 import { Item } from '../../../models/item.inferface';
 import colors from '../../../assets/data/colors';
 
-
 @IonicPage()
 @Component({
   selector: 'page-diagnostic-results',

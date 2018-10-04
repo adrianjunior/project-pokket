@@ -17,7 +17,7 @@
     <br> Parece que você ainda não possui um Histórico.
     <br> Crie um Histórico clicando no botão de '+' ali em cima para ver sua evolução financeira!</p>
   <ion-list>
-    <ion-card ion-item class="history-card" *ngFor="let history of histories; let i = index" (click)="goToHistory(diagnostic)">
+    <ion-card ion-item class="history-card" *ngFor="let history of histories; let i = index" (click)="goToHistory(history)">
       <h1 text-center ion-text color="primary">{{history.name}}</h1>
       <br>
       <h2 ion-text color="primary">Data do Histórico: {{history.date}}</h2>

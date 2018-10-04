@@ -34,7 +34,7 @@ export class MyHistoriesPage {
 
   goToHistory(history: History) {
     this.navCtrl.push(this.historyResultsPage, {
-      historyId: history.id
+      id: history.id
     });
   }
 
