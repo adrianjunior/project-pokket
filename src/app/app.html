@@ -7,7 +7,7 @@
 
   <ion-content>
     <ion-list no-lines>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" color="background">
+      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" color="background" [disabled]="!p.enabled">
         <ion-icon name="{{p.icon}}" item-left color="primary"></ion-icon>
         <h2 ion-text color="primary">{{p.title}}</h2>
       </button>

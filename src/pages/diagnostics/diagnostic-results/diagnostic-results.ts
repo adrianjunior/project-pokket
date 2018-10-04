@@ -7,7 +7,6 @@ import moment from 'moment';
 import { Diagnostic } from '../../../models/diagnostic.interface';
 import { Item } from '../../../models/item.inferface';
 import colors from '../../../assets/data/colors';
-import { isType } from '@angular/core/src/type';
 
 
 @IonicPage()

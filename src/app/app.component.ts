@@ -12,21 +12,21 @@ export class MyApp {
 
   rootPage: any = `MyWalletsPage`;
 
-  pages: Array<{title: string, component: string, icon: string}>;
+  pages: Array<{title: string, component: string, icon: string, enabled: boolean}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'cash' },
-      { title: 'Meus Diagnósticos', component: `MyDiagnosticsPage`, icon: 'clipboard' },
-      { title: 'Meu Histórico', component: `MyWalletsPage`, icon: 'trending-up' },
-      { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open' },
-      { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done' },
-      { title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle' },
-      { title: 'Configuração', component: `MyWalletsPage`, icon: 'settings' },
-      { title: 'Sobre o Aplicativo', component: `MyWalletsPage`, icon: 'information-circle' },
+      { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'cash', enabled: true },
+      { title: 'Meus Diagnósticos', component: `MyDiagnosticsPage`, icon: 'clipboard', enabled: true },
+      { title: 'Meu Histórico', component: `MyHistoriesPage`, icon: 'trending-up', enabled: true },
+      { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open', enabled: false },
+      { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done', enabled: false },
+      { title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle', enabled: false },
+      { title: 'Configuração', component: `MyWalletsPage`, icon: 'settings', enabled: false },
+      { title: 'Sobre o Aplicativo', component: `MyWalletsPage`, icon: 'information-circle', enabled: false },
     ];
 
   }

@@ -4,15 +4,12 @@
       <ion-icon name="menu" color="primary"></ion-icon>
     </button>
     <ion-title>Resultados {{diagnostic.name}}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only color="primary" (click)="goToDiagnosticProfile()">
-        <ion-icon name="create"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <button class="btn-add" ion-button block outline  (click)="goToDiagnosticProfile()">
+    Alterar Diagnóstico</button>
   <ion-item>
     <ion-label>Seção</ion-label>
     <ion-select [(ngModel)]="section" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectSection()" interface="popover">

@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { IonicPage, NavController, NavParams, App, ViewController, ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { Chart } from 'chart.js';
+import moment from 'moment';
 
-/**
- * Generated class for the HistoryResultsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Diagnostic } from '../../../models/diagnostic.interface';
+import { Item } from '../../../models/item.inferface';
+import colors from '../../../assets/data/colors';
 
 @IonicPage()
 @Component({
@@ -14,6 +14,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'history-results.html',
 })
 export class HistoryResultsPage {
+  @ViewChild('chart') chart;
+  chartEl: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }

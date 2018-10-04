@@ -69,7 +69,7 @@ export class MyDiagnosticsPage {
                     this.diagnosticsIds = val;
                   }
                   this.diagnosticsIds.forEach(id => {
-                    // Recebe uma carteira
+                    // Recebe um diagnostico
                     this.getDiagnostic(id);
                   })
                 })
