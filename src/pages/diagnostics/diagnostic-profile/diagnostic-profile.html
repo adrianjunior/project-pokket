@@ -37,7 +37,7 @@
   </div>
   <div class="diagnostic-items">
     <ion-list no-lines>
-      <button ion-item class="item-item" *ngFor="let item of items.reverse(); let i = index" (click)="goToItemProfile(item.id)">
+      <button ion-item class="item-item" *ngFor="let item of items; let i = index" (click)="goToItemProfile(item.id)">
         <ion-grid>
           <ion-row>
             <ion-col col-6>

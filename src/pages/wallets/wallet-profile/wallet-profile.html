@@ -41,7 +41,7 @@
   </div>
   <div class="wallet-transactions">
     <ion-list no-lines>
-      <button ion-item class="transaction-item" *ngFor="let transaction of transactions.reverse(); let i = index" (click)="goToTransactionProfile(transaction.id)">
+      <button ion-item class="transaction-item" *ngFor="let transaction of transactions; let i = index" (click)="goToTransactionProfile(transaction.id)">
         <ion-grid>
           <ion-row>
             <ion-col col-3>
