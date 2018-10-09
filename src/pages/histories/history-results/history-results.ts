@@ -17,8 +17,6 @@ import { History } from '../../../models/history.interface';
 export class HistoryResultsPage implements OnInit {
   @ViewChild('chart') chart;
   chartEl: any;
-  chartData: number[] = [];
-  chartLabels: string[] = [];
   chartType: string = 'line';
 
   historyId: number;
@@ -52,17 +50,17 @@ export class HistoryResultsPage implements OnInit {
   }
 
   onSelectSection() {
-
+    this.getHistory(this.historyId);
   }
 
   getSectionData(items: Item[][], section: number) {
     const dataset: any[][] = [];
-    const incomes: number[] = [];
-    const expenses: number[] = [];
-    const fixedCompulsory: number[] = [];
-    const fixedOptional: number[] = [];
-    const variableCompulsory: number[] = [];
-    const variableOptional: number[] = [];
+    let incomes: number[] = [];
+    let expenses: number[] = [];
+    let fixedCompulsory: number[] = [];
+    let fixedOptional: number[] = [];
+    let variableCompulsory: number[] = [];
+    let variableOptional: number[] = [];
     const dates: string[] = [];
     this.diagnosticsIds.forEach((id, i) => {
       let income = 0;
@@ -86,7 +84,6 @@ export class HistoryResultsPage implements OnInit {
             voe += item.value;
           }
         }
-        console.log()
         if (j >= items[i].length - 1) {
           incomes.push(income);
           expenses.push(expense);
@@ -98,6 +95,11 @@ export class HistoryResultsPage implements OnInit {
       })
       dates.push(this.diagnostics[i].date)
     })
+    expenses = expenses.map(num => num*-1);
+    fixedCompulsory = fixedCompulsory.map(num => num*-1);
+    fixedOptional = fixedOptional.map(num => num*-1);
+    variableCompulsory = variableCompulsory.map(num => num*-1);
+    variableOptional = variableOptional.map(num => num*-1);
     if (section == 0) {
       dataset[0] = ['Receitas', ...incomes];
       dataset[1] = ['Despesas', ...expenses];
@@ -138,15 +140,13 @@ export class HistoryResultsPage implements OnInit {
         }
       }
     });
-    console.log('DATASET: ' + dataset)
     dataset.forEach((labelDataset, index) => {
-      console.log('TOTAL: ' + labelDataset)
-      console.log('LABEL: ' + labelDataset[0])
-      console.log('DATA: ' + labelDataset.shift())
+      const label = labelDataset.shift();
+      const data = labelDataset;
       if (labelDataset.length != 0) {
         this.chartEl.data.datasets.push({
-          label: labelDataset[0],
-          data: labelDataset.shift(),
+          label: label,
+          data: data, 
           duration: 500,
           easing: 'easeInQuart',
           fill: false,
@@ -212,10 +212,6 @@ export class HistoryResultsPage implements OnInit {
           this.diagnosticsItemsIds[i].forEach(id => {
             this.getDiagnosticItem(diagnosticId, id, this.section, i)
           })
-        })
-        .catch(err => {
-          this.presentToast('Ocorreu um erro ao carregar seu Resultado. Por favor, reinicie o app.', 'bottom', 3000);
-          console.log(err);
         })
     })
   }
