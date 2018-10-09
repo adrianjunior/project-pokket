@@ -4,16 +4,16 @@ import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 import moment from 'moment';
 
-import { Diagnostic } from '../../../models/diagnostic.interface';
-import { Item } from '../../../models/item.inferface';
+import { Wallet } from '../../../models/wallet.interface';
+import { Transaction } from '../../../models/transaction.interface';
 import colors from '../../../assets/data/colors';
 
 @IonicPage()
 @Component({
-  selector: 'page-diagnostic-results',
-  templateUrl: 'diagnostic-results.html',
+  selector: 'page-wallet-result',
+  templateUrl: 'wallet-result.html',
 })
-export class DiagnosticResultsPage implements OnInit {
+export class WalletResultPage implements OnInit {
 
   @ViewChild('chart') chart;
   chartEl: any;
@@ -28,12 +28,12 @@ export class DiagnosticResultsPage implements OnInit {
   isEditable: boolean;
   isExpense: boolean;
 
-  diagnosticId: number;
-  diagnostic: Diagnostic;
-  itemsIds: number[];
-  items: Item[];
+  walletId: number;
+  wallet: Wallet;
+  transactionsIds: number[];
+  transactions: Transaction[];
 
-  diagnosticProfilePage: string = `DiagnosticProfilePage`;
+  walletProfilePage: string = `WalletProfilePage`;
 
   constructor(public navCtrl: NavController, private storage: Storage,
     private navParams: NavParams, public appCtrl: App, public toastCtrl: ToastController,
@@ -41,26 +41,25 @@ export class DiagnosticResultsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.diagnostic = {
+    this.wallet = {
       id: 0,
       name: '',
-      date: '',
-      isConcluded: false
+      balance: 0
     }
     this.hasData = false;
     this.section = 0;
     this.expenseType = 0;
     this.isExpense = false;
     this.isEditable = false;
-    this.diagnosticId = this.navParams.get('diagnosticId');
+    this.walletId = this.navParams.get('id');
     this.chartType = 'pie';
-    this.items = [];
-    this.itemsIds = [];
+    this.transactions = [];
+    this.transactionsIds = [];
   }
 
   ionViewWillEnter() {
-    this.getDiagnostic(this.diagnosticId);
-    this.getDiagnosticItems(this.diagnosticId, true, 0);
+    this.getWallet(this.walletId);
+    this.getWalletTransactions(this.walletId, true, 0);
   }
 
   createChart(categoryName: string) {
@@ -111,44 +110,41 @@ export class DiagnosticResultsPage implements OnInit {
     if(this.section == 0) {
       this.isEditable = false;
       this.isExpense = false;
-      console.log(this.isExpense)
-      this.getDiagnosticItems(this.diagnosticId, true, 0);
+      this.getWalletTransactions(this.walletId, true, 0);
     } else if (this.section == 1) {
       this.isEditable = true;
       this.isExpense = false;
-      console.log('this.isExpense')
-      this.getDiagnosticItems(this.diagnosticId, false, 0);
+      this.getWalletTransactions(this.walletId, false, 0);
     } else if (this.section == 2) {
       this.isEditable = false;
       this.isExpense = true;
       this.expenseType = 0;
-      console.log(this.isExpense)
-      this.getDiagnosticItems(this.diagnosticId, true, 1);
+      this.getWalletTransactions(this.walletId, true, 1);
     }
   }
 
   onSelectExpenseType() {
     if (this.expenseType > 0) {
       this.isEditable = true;
-      this.getDiagnosticItems(this.diagnosticId, false, this.expenseType);
+      this.getWalletTransactions(this.walletId, false, this.expenseType);
     } else {
       this.isEditable = false;
-      this.getDiagnosticItems(this.diagnosticId, true, 1);
+      this.getWalletTransactions(this.walletId, true, 1);
     }
   }
 
-  getItemData(items: Item[], type: number) {
+  getTransactionData(transactions: Transaction[], type: number) {
     let values: number[] = [];
     let names: string[] = [];
-    items.filter(item => {
+    transactions.filter(transaction => {
       if (type == 0) {
-        return item.value > 0;
+        return transaction.value > 0;
       } else if (type <= 4) {
-        return item.type == type;
+        return transaction.type == type;
       }
-    }).forEach(item => {
-      values.push(item.value);
-      names.push(item.name);
+    }).forEach(transaction => {
+      values.push(transaction.value);
+      names.push(transaction.name);
     })
     this.chartData = [...values];
     this.chartLabels = [...names];
@@ -167,23 +163,21 @@ export class DiagnosticResultsPage implements OnInit {
     this.createChart(name);
   }
 
-  getTypeData(items: Item[], type: number) {
-    console.log(type, items)
+  getTypeData(transactions: Transaction[], type: number) {
+    console.log(type, transactions)
     if (type == 0) {
       // Receitas x Despesas
       let incomeSum = 0;
       let expenseSum = 0;
-      const incomeList = items.filter(item => item.value > 0)
+      const incomeList = transactions.filter(transaction => transaction.value > 0)
       console.log(...incomeList)
-      incomeList.forEach(item => {
-        incomeSum += item.value;
-        console.log('income ' + item.value)
+      incomeList.forEach(transaction => {
+        incomeSum += transaction.value;
       })
-      const expenseList = items.filter(item => item.value < 0)
+      const expenseList = transactions.filter(transaction => transaction.value < 0)
       console.log(...expenseList)
-      expenseList.forEach(item => {
-        expenseSum += item.value;
-        console.log('expense ' + item.value)
+      expenseList.forEach(transaction => {
+        expenseSum += transaction.value;
       })
       this.chartData = [incomeSum, expenseSum * -1];
       this.chartLabels = ['Receitas', 'Despesas'];
@@ -194,21 +188,21 @@ export class DiagnosticResultsPage implements OnInit {
       let foeSum = 0;
       let vceSum = 0;
       let voeSum = 0;
-      const fce = items.filter(item => item.type == 1)
-        .forEach(item => {
-          fceSum += item.value;
+      const fce = transactions.filter(transaction => transaction.type == 1)
+        .forEach(transaction => {
+          fceSum += transaction.value;
         })
-      const foe = items.filter(item => item.type == 2)
-        .forEach(item => {
-        foeSum += item.value;
+      const foe = transactions.filter(transaction => transaction.type == 2)
+        .forEach(transaction => {
+        foeSum += transaction.value;
       })
-      const vce = items.filter(item => item.type == 3)
-        .forEach(item => {
-        vceSum += item.value;
+      const vce = transactions.filter(transaction => transaction.type == 3)
+        .forEach(transaction => {
+        vceSum += transaction.value;
       })
-      const voe = items.filter(item => item.type == 4)
-        .forEach(item => {
-        voeSum += item.value;
+      const voe = transactions.filter(transaction => transaction.type == 4)
+        .forEach(transaction => {
+        voeSum += transaction.value;
       })
       this.chartData = [fceSum * -1, foeSum * -1, vceSum * -1, voeSum * -1];
       this.chartLabels = ['Fixa Obrigatória', 'Fixa Opcional', 'Variável Obrigatória', 'Variável Opcional'];
@@ -216,9 +210,9 @@ export class DiagnosticResultsPage implements OnInit {
     }
   }
 
-  goToDiagnosticProfile() {
-    this.navCtrl.push(this.diagnosticProfilePage, {
-      id: this.diagnosticId
+  goToWalletProfile() {
+    this.navCtrl.push(this.walletProfilePage, {
+      id: this.walletId
     })
   }
 
@@ -235,13 +229,10 @@ export class DiagnosticResultsPage implements OnInit {
   // DATABASE FUNCTIONS
 
   // Recebe um diagnóstico
-  getDiagnostic(diagnosticId: number) {
-    this.storage.get(`Diagnostic ${diagnosticId}`)
+  getWallet(walletId: number) {
+    this.storage.get(`Wallet ${walletId}`)
       .then(val => {
-        if (val != null) {
-          val.date = moment(val.date).locale('pt-br').format('L');
-        }
-        this.diagnostic = val;
+        this.wallet = val;
       })
       .catch(err => {
         this.presentToast('Ocorreu um erro ao carregar seu Resultado. Por favor, reinicie o app.', 'bottom', 3000);
@@ -249,20 +240,20 @@ export class DiagnosticResultsPage implements OnInit {
       })
   }
 
-  getDiagnosticItems(diagnosticId: number, isTypeData: boolean, type: number) {
-    this.items = [];
-    this.storage.get(`Diagnostic ${diagnosticId} Items`)
+  getWalletTransactions(walletId: number, isTypeData: boolean, type: number) {
+    this.transactions = [];
+    this.storage.get(`Wallet ${walletId} Transactions`)
       .then(val => {
         if (val != null) {
-          this.itemsIds = val
-          if (this.itemsIds.length <= 0) {
+          this.transactionsIds = val
+          if (this.transactionsIds.length <= 0) {
             this.hasData = false;
           }
         } else {
           this.hasData = false;
         }
-        this.itemsIds.forEach(id => {
-          this.getDiagnosticItem(diagnosticId, id, isTypeData, type)
+        this.transactionsIds.forEach(id => {
+          this.getWalletTransaction(walletId, id, isTypeData, type)
         })
       })
       .catch(err => {
@@ -271,20 +262,19 @@ export class DiagnosticResultsPage implements OnInit {
       })
   }
 
-  getDiagnosticItem(diagnosticId: number, itemId: number, isTypeData: boolean, type: number) {
+  getWalletTransaction(walletId: number, transactionId: number, isTypeData: boolean, type: number) {
     this.hasData = true;
-    this.storage.get(`Diagnostic ${diagnosticId} Item ${itemId}`)
+    this.storage.get(`Wallet ${walletId} Transaction ${transactionId}`)
       .then(val => {
         if (val != null) {
-          this.items.push(val);
+          this.transactions.push(val);
         }
-        console.log(`ITEMS ${this.items.length} X ${this.itemsIds.length} IDS`)
-        if (this.items.length >= this.itemsIds.length) {
-
+        if (this.transactions.length >= this.transactionsIds.length) {
+          console.log(this.transactions)
           if (isTypeData) {
-            this.getTypeData(this.items, type)
+            this.getTypeData(this.transactions, type)
           } else {
-            this.getItemData(this.items, type)
+            this.getTransactionData(this.transactions, type)
           }
         }
       })

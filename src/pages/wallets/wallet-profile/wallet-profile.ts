@@ -17,6 +17,7 @@ export class WalletProfilePage {
   transactionProfilePage: string = `TransactionProfilePage`;
   walletExtractPage: string = `WalletExtractPage`;
   editWalletPage: string = `EditWalletPage`;
+  walletResult: string = `WalletResultPage`;
 
   walletId: number;
   wallet: Wallet = {
@@ -62,6 +63,12 @@ export class WalletProfilePage {
 
   goToEditWallet() {
     this.navCtrl.push(this.editWalletPage, {
+      id: this.walletId
+    })
+  }
+
+  goToWalletResults() {
+    this.navCtrl.push(this.walletResult, {
       id: this.walletId
     })
   }

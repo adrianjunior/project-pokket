@@ -137,7 +137,21 @@ export class HistoryResultsPage implements OnInit {
               beginAtZero: true
             }
           }]
-        }
+        },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              let dataset = data.datasets[tooltipItem.datasetIndex];
+              let meta = dataset._meta[Object.keys(dataset._meta)[0]];
+              let total = meta.total;
+              let currentValue = dataset.data[tooltipItem.index];
+              return `R$${currentValue.toFixed(2).toString().replace(".", ",")}`;
+            },
+            title: function (tooltipItem, data) {
+              return data.labels[tooltipItem[0].index];
+            }
+          }
+        },
       }
     });
     dataset.forEach((labelDataset, index) => {

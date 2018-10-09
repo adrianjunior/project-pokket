@@ -3,13 +3,13 @@
     <button ion-button menuToggle>
       <ion-icon name="menu" color="primary"></ion-icon>
     </button>
-    <ion-title>Resultados {{diagnostic.name}}</ion-title>
+    <ion-title>Resultados {{wallet.name}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button class="btn-add" ion-button block outline  (click)="goToDiagnosticProfile()">
-    Alterar Diagnóstico</button>
+  <button class="btn-add" ion-button block outline  (click)="goToWalletProfile()">
+    Alterar Carteira</button>
   <ion-item>
     <ion-label>Seção</ion-label>
     <ion-select [(ngModel)]="section" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectSection()" interface="popover">
