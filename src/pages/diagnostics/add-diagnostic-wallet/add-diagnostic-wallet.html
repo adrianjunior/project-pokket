@@ -1,0 +1,26 @@
+<ion-header no-border>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>{{diagnostic.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary" (click)="goToEditDiagnostic()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h2>Escolha quais carteiras adicionar ao seu diagnóstico.</h2>
+  <ion-list no-lines *ngIf="wallets.length > 0">
+    <ion-item *ngFor="let wallet of wallets; let i = index">
+      <ion-label>{{wallet.name}}</ion-label>
+      <ion-checkbox [(ngModel)]="selectedWallets[i]" (ionChange)="updateSelected()"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <br>
+  <button class="btn-add" ion-button block outline (click)="addWalletsToDiagnostic()" [disabled]="selected < 1">
+    Adicionar Carteiras ao Diagnóstico</button>
+</ion-content>

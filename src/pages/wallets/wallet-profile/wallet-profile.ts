@@ -105,7 +105,7 @@ export class WalletProfilePage {
                     this.transactionsIds = val;
                   }
                   this.transactionsIds.forEach(id => {
-                    // Recebe uma carteira
+                    // Recebe uma transação
                     this.getTransaction(id, walletId);
                   })
                 })

@@ -28,6 +28,7 @@ export class DiagnosticProfilePage {
   diagnosticsItemsPage: string = `DiagnosticItemsPage`
   editDiagnosticPage: string = `EditDiagnosticPage`
   diagnosticResultsPage: string = `DiagnosticResultsPage`
+  addDiagnosticWalletPage: string = `AddDiagnosticWalletPage`
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public popoverCtrl: PopoverController, private storage: Storage,
@@ -52,6 +53,12 @@ export class DiagnosticProfilePage {
   goToAddItem(isIncome: boolean) {
     this.navCtrl.push(this.addDiagnosticItemPage, {
       isIncome: isIncome,
+      id: this.diagnosticId
+    });
+  }
+
+  goToAddWallet() {
+    this.navCtrl.push(this.addDiagnosticWalletPage, {
       id: this.diagnosticId
     });
   }
