@@ -17,7 +17,7 @@
   <ion-list no-lines *ngIf="wallets.length > 0">
     <ion-item *ngFor="let wallet of wallets; let i = index">
       <ion-label>{{wallet.name}}</ion-label>
-      <ion-checkbox [(ngModel)]="selectedWallets[i]" (ionChange)="updateSelected()"></ion-checkbox>
+      <ion-checkbox [(ngModel)]="walletsSelector[i]" (ionChange)="updateSelected()"></ion-checkbox>
     </ion-item>
   </ion-list>
   <br>
