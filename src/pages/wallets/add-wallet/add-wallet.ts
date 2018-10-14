@@ -73,19 +73,27 @@ export class AddWalletPage implements OnInit {
           this.setWalletsIds(this.walletsIds);
         })
         .then(() => {
-          if (wallet.balance > 0) {
-            // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
+          // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
+          if (wallet.balance > 0) {            
             this.setWalletInitialBalance(wallet);
           }
         })
         .then(() => {
           // Seta a ID da próxima  transação a ser criada
-          this.setNextTransactionId(wallet.id);
+          if (wallet.balance > 0) {
+            this.setNextTransactionId(1);
+          } else {
+            this.setNextTransactionId(0);
+          }
         })
         .then(() => {
+          // Adiciona a ID da transação criada para a lista de transações
           if (wallet.balance != null) {
-            // Adiciona a ID da transação criada para a lista de transações
-            this.setWalletTransactions(wallet.id, [0]);
+            if (wallet.balance > 0) {
+              this.setWalletTransactions(wallet.id, [0]);
+            } else {
+              this.setWalletTransactions(wallet.id, []);
+            }            
           }
         })
         .then(() => {

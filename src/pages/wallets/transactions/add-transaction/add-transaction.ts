@@ -117,7 +117,7 @@ export class AddTransactionPage implements OnInit {
       })
       .then(() => {
         this.nextId += 1;
-        this.setNextTransactionId(this.walletId, this.nextId + 1);
+        this.setNextTransactionId(this.walletId, this.nextId);
       })
       .then(() => {
         console.log('Antes ' + this.wallet.balance);

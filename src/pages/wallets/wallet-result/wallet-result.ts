@@ -23,10 +23,11 @@ export class WalletResultPage implements OnInit {
 
   section: number;
   expenseType: number;
+  show: number;
 
   hasData: boolean;
-  isEditable: boolean;
   isExpense: boolean;
+  isShowable: boolean;
 
   walletId: number;
   wallet: Wallet;
@@ -49,8 +50,9 @@ export class WalletResultPage implements OnInit {
     this.hasData = false;
     this.section = 0;
     this.expenseType = 0;
+    this.show = 0;
     this.isExpense = false;
-    this.isEditable = false;
+    this.isShowable = false;
     this.walletId = this.navParams.get('id');
     this.chartType = 'pie';
     this.transactions = [];
@@ -63,6 +65,8 @@ export class WalletResultPage implements OnInit {
   }
 
   createChart(categoryName: string) {
+    console.log(`CHART LABELS: ${this.chartLabels}`);
+    console.log(`CHART DATA: ${this.chartData}`);
     Chart.defaults.global.legend.position = 'top';
     this.chartEl = new Chart(this.chart.nativeElement, {
       type: this.chartType,
@@ -108,74 +112,112 @@ export class WalletResultPage implements OnInit {
 
   onSelectSection() {
     if(this.section == 0) {
-      this.isEditable = false;
       this.isExpense = false;
+      this.isShowable = false;
       this.getWalletTransactions(this.walletId, true, 0);
     } else if (this.section == 1) {
-      this.isEditable = true;
       this.isExpense = false;
+      this.isShowable = true;
+      this.show = 0;
       this.getWalletTransactions(this.walletId, false, 0);
     } else if (this.section == 2) {
-      this.isEditable = false;
       this.isExpense = true;
+      this.isShowable = false;
       this.expenseType = 0;
+      this.show = 0;
       this.getWalletTransactions(this.walletId, true, 1);
     }
   }
 
   onSelectExpenseType() {
     if (this.expenseType > 0) {
-      this.isEditable = true;
+      this.isShowable = true;
+      this.show = 0;
       this.getWalletTransactions(this.walletId, false, this.expenseType);
     } else {
-      this.isEditable = false;
+      this.isShowable = false;
+      this.show = 0;
       this.getWalletTransactions(this.walletId, true, 1);
     }
   }
 
+  onSelectShow() {
+    let type: number;
+    if (this.section == 1) {
+      type = 0;
+    } else if (this.section == 2) {
+      type = this.expenseType;
+    }
+    
+    this.getTransactionData(this.transactions, type);
+  }
+
   getTransactionData(transactions: Transaction[], type: number) {
     let values: number[] = [];
-    let names: string[] = [];
-    transactions.filter(transaction => {
-      if (type == 0) {
-        return transaction.value > 0;
-      } else if (type <= 4) {
-        return transaction.type == type;
-      }
-    }).forEach(transaction => {
-      values.push(transaction.value);
-      names.push(transaction.name);
-    })
+    let names: string[] = [];    
+    if (this.show == 0) {
+      transactions.filter(transaction => {
+        if (type == 0) {
+          return transaction.value > 0;
+        } else if (type <= 4) {
+          return transaction.type == type;
+        }
+      }).forEach(transaction => {
+        values.push(transaction.value);
+        names.push(transaction.name);
+      })
+    } else {
+      transactions.filter(transaction => {
+        if (type == 0) {
+          return transaction.value > 0;
+        } else if (type <= 4) {
+          return transaction.type == type;
+        }
+      }).forEach(transaction => {
+        if (transaction.category == null) {
+          transaction.category = 'Sem Categoria'
+        }
+        if(names.length == 0) {
+          names.push(transaction.category)
+          values.push(transaction.value)
+        } else {
+          if(names.find(category => category === transaction.category) == undefined){
+            names.push(transaction.category)
+            values.push(transaction.value)
+          } else {
+            const index = names.indexOf(transaction.category)
+            values[index] += transaction.value;
+          }
+        }
+      })
+    }
     this.chartData = [...values];
     this.chartLabels = [...names];
     let name;
-    if (type == 1) {
+    if (type == 0) {
       name = 'Receitas;'
-    } else if (type == 2) {
+    } else if (type == 1) {
       name = 'Despesas Fixas Obrigatórias'
-    } else if (type == 3) {
+    } else if (type == 2) {
       name = 'Despesas Fixas Opcionais'
-    } else if (type == 4) {
+    } else if (type == 3) {
       name = 'Despesas Variáveis Obrigatórias'
-    } else if (type == 5) {
+    } else if (type == 4) {
       name = 'Despesas Variáveis Opcionais'
     }
     this.createChart(name);
   }
 
   getTypeData(transactions: Transaction[], type: number) {
-    console.log(type, transactions)
     if (type == 0) {
       // Receitas x Despesas
       let incomeSum = 0;
       let expenseSum = 0;
       const incomeList = transactions.filter(transaction => transaction.value > 0)
-      console.log(...incomeList)
       incomeList.forEach(transaction => {
         incomeSum += transaction.value;
       })
       const expenseList = transactions.filter(transaction => transaction.value < 0)
-      console.log(...expenseList)
       expenseList.forEach(transaction => {
         expenseSum += transaction.value;
       })
@@ -268,9 +310,9 @@ export class WalletResultPage implements OnInit {
       .then(val => {
         if (val != null) {
           this.transactions.push(val);
+          console.log('PASSOU');
         }
-        if (this.transactions.length >= this.transactionsIds.length) {
-          console.log(this.transactions)
+        if (this.transactions.length >= this.transactionsIds.length) {          
           if (isTypeData) {
             this.getTypeData(this.transactions, type)
           } else {
