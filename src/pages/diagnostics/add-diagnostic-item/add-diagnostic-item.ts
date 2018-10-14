@@ -33,12 +33,22 @@ export class AddDiagnosticItemPage implements OnInit {
     this.itemsIds = [];
     this.isIncome = this.navParams.get('isIncome');
     this.diagnosticId = this.navParams.get('id');
-    this.formGroup = this.formBuilder.group({
-      'name': ['', Validators.required],
-      'value': [null, Validators.required],
-      'category': [''],
-      'type': [null, Validators.required]
-    });
+    if(this.isIncome) {
+      this.formGroup = this.formBuilder.group({
+        'name': ['', Validators.required],
+        'value': [null, Validators.required],
+        'category': [''],
+        'type': [null]
+      });
+    } else {
+      this.formGroup = this.formBuilder.group({
+        'name': ['', Validators.required],
+        'value': [null, Validators.required],
+        'category': [''],
+        'type': [null, Validators.required]
+      });
+    }
+    
     this.getItems(this.diagnosticId);
     this.getNextItemId(this.diagnosticId);
     if (this.isIncome) {
@@ -62,45 +72,49 @@ export class AddDiagnosticItemPage implements OnInit {
 
   addItem(formValue: any, addMore: boolean) {
     let value: number = Number(Number(formValue.value).toFixed(2));
-    if (value > 0) {
-      if (!this.isIncome) {
-        value = value * -1;
-      }
-      let item: Item = {
-        id: this.nextId,
-        name: formValue.name,
-        value: Number(value.toFixed(2)),
-        diagnostic: this.diagnosticId
-      }
-      if (formValue.category != null) {
-        item.category = formValue.category;
-      }
-      if (formValue.type != null) {
-        item.type = formValue.type;
-      }
-      this.storage.set(`Diagnostic ${this.diagnosticId} Item ${this.nextId}`, item)
-        .then(() => {
-          this.setItems(this.diagnosticId, this.nextId);
-        })
-        .then(() => {
-          this.nextId += 1;
-          this.setNextItemId(this.diagnosticId, this.nextId);
-        })
-        .then(() => {
-          if (addMore) {
-            this.formGroup.reset();
-          } else {
-            this.navCtrl.pop();
-          }
-          this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
-        })
-        .catch(err => {
-          this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
-          console.log(err);
-        })
-    } else {
+    /*if ((value > 0 && formValue.name != '') && ((this.isIncome) || (!this.isIncome && formValue.type != null))) {
+    } else if (formValue.name == '') {
+      this.presentToast('Você deve colocar um nome.', 'bottom', 3000);
+    } else if (value <= 0) {
       this.presentToast('O valor não pode ser 0 ou menor.', 'bottom', 3000);
+    } else if (!this.isIncome && formValue.type == null) {
+      this.presentToast('Você deve colocar um tipo.', 'bottom', 3000);
+    }*/
+    if (!this.isIncome) {
+      value = value * -1;
     }
+    let item: Item = {
+      id: this.nextId,
+      name: formValue.name,
+      value: Number(value.toFixed(2)),
+      diagnostic: this.diagnosticId
+    }
+    if (formValue.category != null) {
+      item.category = formValue.category;
+    }
+    if (formValue.type != null) {
+      item.type = formValue.type;
+    }
+    this.storage.set(`Diagnostic ${this.diagnosticId} Item ${this.nextId}`, item)
+      .then(() => {
+        this.setItems(this.diagnosticId, this.nextId);
+      })
+      .then(() => {
+        this.nextId += 1;
+        this.setNextItemId(this.diagnosticId, this.nextId);
+      })
+      .then(() => {
+        if (addMore) {
+          this.formGroup.reset();
+        } else {
+          this.navCtrl.pop();
+        }
+        this.presentToast(`Parabéns. Sua ${this.whatIs} foi adicionada com sucesso!`, 'bottom', 3000);
+      })
+      .catch(err => {
+        this.presentToast(`Ocorreu um erro ao salvar sua ${this.whatIs}. Por favor, reinicie o app.`, 'bottom', 3000);
+        console.log(err);
+      })
   }
 
   getItems(diagnosticId: number) {

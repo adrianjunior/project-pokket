@@ -22,9 +22,9 @@
       <ion-input type="number" formControlName="balance" name="balance"></ion-input>
     </ion-item>
     <br>
-    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, true)">
-      Salvar Carteira e adicionar outra</button>
-    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, false)">
+    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, false)" [disabled]="formGroup.invalid">
       Salvar Carteira e voltar</button>
+    <button class="btn-add" ion-button block outline (click)="addWallet(formGroup.value, true)" [disabled]="formGroup.invalid">
+      Salvar Carteira e adicionar outra</button>
   </form>
 </ion-content>

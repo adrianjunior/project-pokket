@@ -15,7 +15,7 @@
       <ion-label floating>Nome do Diagnóstico</ion-label>
       <ion-input type="text" formControlName="name" name="name"></ion-input>
     </ion-item>
-    <button class="btn-add" ion-button block outline (click)="addDiagnostic(formGroup.value)">
+    <button class="btn-add" ion-button block outline (click)="addDiagnostic(formGroup.value)" [disabled]="formGroup.invalid">
       Salvar Diagnóstico e Continuar</button>
   </form>
 </ion-content>

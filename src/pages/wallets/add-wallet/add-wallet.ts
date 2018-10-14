@@ -37,7 +37,7 @@ export class AddWalletPage implements OnInit {
     this.getWalletsIds();
     this.formGroup = this.formBuilder.group({
       'name': ['', Validators.required],
-      'balance': [null, Validators.required],
+      'balance': [null],
     });
   }
 
@@ -55,51 +55,55 @@ export class AddWalletPage implements OnInit {
 
   // Adiciona uma nova carteira
   addWallet(formValue: any, addMore: boolean) {
-    let wallet: Wallet = {
-      id: this.nextId,
-      name: formValue.name,
-      balance: Number(Number(formValue.balance).toFixed(2))
-    };
-    this.storage.set(`Wallet ${wallet.id}`, wallet)
-      .then(() => {
-        this.nextId += 1;
-        // Seta a ID da próxima carteira a ser criada
-        this.setNextId(this.nextId);
-      })
-      .then(() => {
-        this.walletsIds.push(wallet.id);
-        // Adiciona a ID da carteira criada para a lista de carteiras
-        this.setWalletsIds(this.walletsIds);
-      })
-      .then(() => {
-        if (wallet.balance != null) {
-          // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
-          this.setWalletInitialBalance(wallet);
-        }
-      })
-      .then(() => {
-        // Seta a ID da próxima  transação a ser criada
-        this.setNextTransactionId(wallet.id);
-      })
-      .then(() => {
-        if (wallet.balance != null) {
-          // Adiciona a ID da transação criada para a lista de transações
-          this.setWalletTransactions(wallet.id, [0]);
-        }
-      })
-      .then(() => {
-        // Checa se o usuário entrou com a opção de adicionar uma nova carteira ou voltar para a lista
-        if (addMore) {
-          this.formGroup.reset();
-        } else {
-          this.navCtrl.pop();
-        }
-        this.presentToast('Parabéns. Sua Carteira foi criada com sucesso!', 'bottom', 3000);
-      })
-      .catch(err => {
-        this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
-        console.log(err);
-      })
+    if (formValue.name != '') {
+      let wallet: Wallet = {
+        id: this.nextId,
+        name: formValue.name,
+        balance: Number(Number(formValue.balance).toFixed(2))
+      };
+      this.storage.set(`Wallet ${wallet.id}`, wallet)
+        .then(() => {
+          this.nextId += 1;
+          // Seta a ID da próxima carteira a ser criada
+          this.setNextId(this.nextId);
+        })
+        .then(() => {
+          this.walletsIds.push(wallet.id);
+          // Adiciona a ID da carteira criada para a lista de carteiras
+          this.setWalletsIds(this.walletsIds);
+        })
+        .then(() => {
+          if (wallet.balance > 0) {
+            // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
+            this.setWalletInitialBalance(wallet);
+          }
+        })
+        .then(() => {
+          // Seta a ID da próxima  transação a ser criada
+          this.setNextTransactionId(wallet.id);
+        })
+        .then(() => {
+          if (wallet.balance != null) {
+            // Adiciona a ID da transação criada para a lista de transações
+            this.setWalletTransactions(wallet.id, [0]);
+          }
+        })
+        .then(() => {
+          // Checa se o usuário entrou com a opção de adicionar uma nova carteira ou voltar para a lista
+          if (addMore) {
+            this.formGroup.reset();
+          } else {
+            this.navCtrl.pop();
+          }
+          this.presentToast('Parabéns. Sua Carteira foi criada com sucesso!', 'bottom', 3000);
+        })
+        .catch(err => {
+          this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
+          console.log(err);
+        })
+    } else {
+      this.presentToast('Você deve colocar um nome.', 'bottoms', 3000);
+    }
   }
 
   setNextId(id: number) {

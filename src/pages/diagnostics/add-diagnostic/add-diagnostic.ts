@@ -30,8 +30,7 @@ export class AddDiagnosticPage implements OnInit {
       this.diagnosticsIds = [];
       this.getDiagnosticsIds();
       this.formGroup = this.formBuilder.group({
-        'name': ['', Validators.required],
-        'balance': [null, Validators.required],
+        'name': ['', Validators.required]
       });
     }
 
@@ -48,6 +47,10 @@ export class AddDiagnosticPage implements OnInit {
     // DATABASE FUNCTIONS
     
     addDiagnostic(formValue: any) {
+      /*if(formValue.name != '') {
+      } else {
+        this.presentToast('Você deve colocar um nome.', 'bottoms', 3000);
+      }*/
       let diagnostic: Diagnostic = {
         id: this.nextId,
         name: formValue.name,
@@ -55,24 +58,24 @@ export class AddDiagnosticPage implements OnInit {
         isConcluded: false
       }
       this.storage.set(`Diagnostic ${this.nextId}`, diagnostic)
-                  .then(() => {
-                    this.nextId += 1;
-                    this.setNextId(this.nextId);
-                  })
-                  .then(() => {
-                    this.diagnosticsIds.push(diagnostic.id);
-                    this.setDiagnosticsIds(this.diagnosticsIds);
-                  })
-                  .then(() => {
-                    this.navCtrl.pop();
-                    this.navCtrl.push(this.diagnosticProfilePage, {
-                      id: this.nextId-1
-                    })
-                  })
-                  .catch(err => {
-                    this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
-                    console.log(err);
-                  })
+        .then(() => {
+          this.nextId += 1;
+          this.setNextId(this.nextId);
+        })
+        .then(() => {
+          this.diagnosticsIds.push(diagnostic.id);
+          this.setDiagnosticsIds(this.diagnosticsIds);
+        })
+        .then(() => {
+          this.navCtrl.pop();
+          this.navCtrl.push(this.diagnosticProfilePage, {
+            id: this.nextId-1
+          })
+        })
+        .catch(err => {
+          this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
+          console.log(err);
+        })
     }
 
     setNextId(id: number) {

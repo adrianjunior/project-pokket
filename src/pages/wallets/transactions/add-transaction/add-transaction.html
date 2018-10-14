@@ -34,12 +34,12 @@
     </ion-item>
     <br>
     <div *ngIf="isIncome == true">
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Receita e adicionar outra</button>
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Receita e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)" [disabled]="formGroup.invalid">Salvar Receita e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)" [disabled]="formGroup.invalid">Salvar Receita e adicionar outra</button>
     </div>
     <div *ngIf="isIncome == false">
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)">Salvar Despesa e adicionar outra</button>
-      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)">Salvar Despesa e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, false)" [disabled]="formGroup.invalid">Salvar Despesa e voltar</button>
+      <button class="btn-add" ion-button block outline (click)="addTransaction(formGroup.value, true)" [disabled]="formGroup.invalid">Salvar Despesa e adicionar outra</button>
     </div>
   </form>
 </ion-content>
