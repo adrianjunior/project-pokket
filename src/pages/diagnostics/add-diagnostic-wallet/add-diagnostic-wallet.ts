@@ -34,6 +34,7 @@ export class AddDiagnosticWalletPage {
     this.walletsSelector = [];
     this.selectedWallets = [];
     this.selected = 0;
+    this.itemsIds = [];
     this.diagnostic = {
       id: 0,
       name: '',
@@ -49,8 +50,9 @@ export class AddDiagnosticWalletPage {
 
   updateSelected() {
     this.selected = 0;
+    this.selectedWallets = [];
     
-    this.wallets.forEach((d, i) => {
+    this.walletsSelector.forEach((d, i) => {
       if(d) {
         this.selected += 1;
         this.selectedWallets.push(this.wallets[i].id);
@@ -112,9 +114,24 @@ export class AddDiagnosticWalletPage {
   getItemsIds(diagnosticId: number) {
     this.storage.get(`Diagnostic ${diagnosticId} Items`)
       .then(val => {
-        this.itemsIds = val;
+        if(val != null) {
+          this.itemsIds = val;
+          console.log(`ITEMS IDS ${this.itemsIds}`)
+        }
       })
     }
+
+  getNextItemId(diagnosticId: number) {
+    this.storage.get(`Diagnostic ${diagnosticId} Next Item id`)
+      .then(val => {
+        if (val != null) {
+          this.itemNextId = val;
+          console.log(this.itemNextId);
+        } else {
+          this.itemNextId = 1;
+        }
+      })
+  }
 
   getWalletTransactionsIds(walletId: number, isLast: boolean) {
     let transactionsIds;
@@ -161,12 +178,13 @@ export class AddDiagnosticWalletPage {
   }
 
   addItem(item: Item, isLast: boolean) {
+    console.log(`ITEMS IDS: ${this.itemsIds}`)
     this.storage.set(`Diagnostic ${this.diagnosticId} Item ${item.id}`, item)
       .then(() => {
         this.itemsIds = [...this.itemsIds, item.id]
         if (isLast) {
           this.setItemsIds(this.diagnosticId);
-          this.setNextItemId(this.diagnosticId, this.itemsIds[this.itemsIds.length - 1])
+          this.setNextItemId(this.diagnosticId, this.itemsIds[this.itemsIds.length - 1]+1)
         }
       })
   }
@@ -178,17 +196,5 @@ export class AddDiagnosticWalletPage {
   setNextItemId(diagnosticId: number, id: number) {
     this.storage.set(`Diagnostic ${diagnosticId} Next Item id`, id)
     this.navCtrl.pop();
-  }
-
-  getNextItemId(diagnosticId: number) {
-    this.storage.get(`Diagnostic ${diagnosticId} Next Item id`)
-      .then(val => {
-        if (val != null) {
-          this.itemNextId = val;
-          console.log(this.itemNextId);
-        } else {
-          this.itemNextId = 1;
-        }
-      })
   }
 }

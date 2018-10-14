@@ -74,7 +74,7 @@ export class AddWalletPage implements OnInit {
       .then(() => {
         if (wallet.balance != null) {
           // Adiciona uma primeira transação a carteira, com o valor inicial entrado pelo usuário
-          this.setWalletInitialBalance(wallet.id, wallet.balance);
+          this.setWalletInitialBalance(wallet);
         }
       })
       .then(() => {
@@ -110,15 +110,15 @@ export class AddWalletPage implements OnInit {
     this.storage.set('WalletsIds', walletsIds)
   }
 
-  setWalletInitialBalance(id: number, value: number) {
+  setWalletInitialBalance(wallet: Wallet) {
     this.firstTransaction = {
       id: 0,
-      name: 'Valor Inicial',
-      value: Number(value.toFixed(2)),
+      name: `${wallet.name} Inicial`,
+      value: Number(wallet.balance.toFixed(2)),
       date: moment().format('YYYY-MM-DD'),
-      wallet: id
+      wallet: wallet.id
     }
-    this.storage.set(`Wallet ${id} Transaction 0`, this.firstTransaction)
+    this.storage.set(`Wallet ${wallet.id} Transaction 0`, this.firstTransaction)
   }
 
   setNextTransactionId(walletId: number) {
@@ -155,7 +155,5 @@ export class AddWalletPage implements OnInit {
         console.log((this.nextId));
       })
   }
-
-
 
 }
