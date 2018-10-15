@@ -18,7 +18,7 @@
       <ion-option value="2">Despesas</ion-option>
     </ion-select>
   </ion-item>
-  <ion-item *ngIf="isExpense == true"  style="padding-bottom: 30px">
+  <ion-item *ngIf="isExpense == true">
     <ion-label>Tipo de Despesa</ion-label>
     <ion-select [(ngModel)]="expenseType" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectExpenseType()" interface="popover">
       <ion-option value="0">Geral</ion-option>
@@ -26,6 +26,13 @@
       <ion-option value="2">Fixo Opcional</ion-option>
       <ion-option value="3">Variável Obrigatório</ion-option>
       <ion-option value="4">Variável Opcional</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="isShowable == true">
+    <ion-label>Mostrar: </ion-label>
+    <ion-select [(ngModel)]="show" cancelText="Cancelar" okText="Ok" (ionChange)="onSelectShow()" interface="popover">
+      <ion-option value="0">Por Nome</ion-option>
+      <ion-option value="1">Por Categoria</ion-option>
     </ion-select>
   </ion-item>
 

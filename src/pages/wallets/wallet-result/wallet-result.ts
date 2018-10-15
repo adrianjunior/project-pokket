@@ -163,6 +163,9 @@ export class WalletResultPage implements OnInit {
           return transaction.type == type;
         }
       }).forEach(transaction => {
+        if (type > 0) {
+          transaction.value *= -1;
+        }
         values.push(transaction.value);
         names.push(transaction.name);
       })
@@ -178,10 +181,16 @@ export class WalletResultPage implements OnInit {
           transaction.category = 'Sem Categoria'
         }
         if(names.length == 0) {
+          if (type > 0) {
+            transaction.value *= -1;
+          }
           names.push(transaction.category)
           values.push(transaction.value)
         } else {
           if(names.find(category => category === transaction.category) == undefined){
+            if (type > 0) {
+              transaction.value *= -1;
+            }
             names.push(transaction.category)
             values.push(transaction.value)
           } else {

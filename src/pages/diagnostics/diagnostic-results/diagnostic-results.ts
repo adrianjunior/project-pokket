@@ -23,10 +23,11 @@ export class DiagnosticResultsPage implements OnInit {
 
   section: number;
   expenseType: number;
+  show: number;
 
   hasData: boolean;
-  isEditable: boolean;
   isExpense: boolean;
+  isShowable: boolean;
 
   diagnosticId: number;
   diagnostic: Diagnostic;
@@ -50,8 +51,9 @@ export class DiagnosticResultsPage implements OnInit {
     this.hasData = false;
     this.section = 0;
     this.expenseType = 0;
+    this.show = 0;
     this.isExpense = false;
-    this.isEditable = false;
+    this.isShowable = false;
     this.diagnosticId = this.navParams.get('diagnosticId');
     this.chartType = 'pie';
     this.items = [];
@@ -109,59 +111,104 @@ export class DiagnosticResultsPage implements OnInit {
 
   onSelectSection() {
     if(this.section == 0) {
-      this.isEditable = false;
+      this.isShowable = false;
       this.isExpense = false;
-      console.log(this.isExpense)
       this.getDiagnosticItems(this.diagnosticId, true, 0);
     } else if (this.section == 1) {
-      this.isEditable = true;
+      this.isShowable = true;
       this.isExpense = false;
-      console.log('this.isExpense')
       this.getDiagnosticItems(this.diagnosticId, false, 0);
     } else if (this.section == 2) {
-      this.isEditable = false;
+      this.isShowable = false;
       this.isExpense = true;
       this.expenseType = 0;
-      console.log(this.isExpense)
       this.getDiagnosticItems(this.diagnosticId, true, 1);
     }
   }
 
   onSelectExpenseType() {
     if (this.expenseType > 0) {
-      this.isEditable = true;
+      this.isShowable = true;
+      this.show = 0;
       this.getDiagnosticItems(this.diagnosticId, false, this.expenseType);
     } else {
-      this.isEditable = false;
+      this.isShowable = false;
+      this.show = 0;
       this.getDiagnosticItems(this.diagnosticId, true, 1);
     }
+  }
+
+  onSelectShow() {
+    let type: number;
+    if (this.section == 1) {
+      type = 0;
+    } else if (this.section == 2) {
+      type = this.expenseType;
+    }
+    
+    this.getItemData(this.items, type);
   }
 
   getItemData(items: Item[], type: number) {
     let values: number[] = [];
     let names: string[] = [];
-    items.filter(item => {
-      if (type == 0) {
-        return item.value > 0;
-      } else if (type <= 4) {
-        return item.type == type;
-      }
-    }).forEach(item => {
-      values.push(item.value);
-      names.push(item.name);
-    })
+    if (this.show == 0) {
+      items.filter(item => {
+        if (type == 0) {
+          return item.value > 0;
+        } else if (type <= 4) {
+          return item.type == type;
+        }
+      }).forEach(item => {
+        if (type > 0) {
+          item.value *= -1;
+        }
+        values.push(item.value);
+        names.push(item.name);
+      })
+    } else {
+      items.filter(item => {
+        if (type == 0) {
+          return item.value > 0;
+        } else if (type <= 4) {
+          return item.type == type;
+        }
+      }).forEach(item => {
+        if (item.category == null) {
+          item.category = 'Sem Categoria'
+        }
+        if(names.length == 0) {
+          if (type > 0) {
+            item.value *= -1;
+          }
+          names.push(item.category)
+          values.push(item.value)
+        } else {
+          if(names.find(category => category === item.category) == undefined){
+            if (type > 0) {
+              item.value *= -1;
+            }
+            names.push(item.category)
+            values.push(item.value)
+          } else {
+            const index = names.indexOf(item.category)
+            values[index] += item.value;
+          }
+        }
+      })
+    }
     this.chartData = [...values];
     this.chartLabels = [...names];
     let name;
-    if (type == 1) {
+    if (type == 0) {
       name = 'Receitas;'
-    } else if (type == 2) {
+    } else if (type == 1) {
       name = 'Despesas Fixas Obrigatórias'
-    } else if (type == 3) {
+    } else if (type == 2) {
       name = 'Despesas Fixas Opcionais'
-    } else if (type == 4) {
+    } else if (type == 3) {
       name = 'Despesas Variáveis Obrigatórias'
-    } else if (type == 5) {
+    } else if (type == 4) {
       name = 'Despesas Variáveis Opcionais'
     }
     this.createChart(name);

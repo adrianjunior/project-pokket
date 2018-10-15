@@ -26,7 +26,7 @@ export class HistoryResultsPage implements OnInit {
   diagnosticsItemsIds;
   diagnosticsItems;
 
-  section: number = 0;
+  section: number = 0;z
   hasData: boolean = false;
 
   constructor(public navCtrl: NavController, private storage: Storage,
