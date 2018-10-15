@@ -24,8 +24,8 @@ export class MyApp {
       { title: 'Meu Histórico', component: `MyHistoriesPage`, icon: 'trending-up', enabled: true },
       { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open', enabled: false },
       { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done', enabled: false },
-      { title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle', enabled: false },
-      { title: 'Configuração', component: `MyWalletsPage`, icon: 'settings', enabled: false },
+      //{ title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle', enabled: false },
+      { title: 'Gerenciar Senha', component: `PasswordConfigPage`, icon: 'lock', enabled: true },
       { title: 'Sobre o Aplicativo', component: `MyWalletsPage`, icon: 'information-circle', enabled: false },
     ];
 
