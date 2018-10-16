@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Pokket</name>
+    <name>Meubolso</name>
     <description>Um aplicativo de controle financeiro para as famílias.</description>
-    <author email="dev.adrianjunior@gmail.com">Adrian Júnior</author>
+    <author email="dev.adrianjunior@gmail.com">Adrian Rausley Ferreira Pinto Júnior</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -19,6 +19,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -86,6 +87,6 @@
     <allow-navigation href="http://10.152.58.26:8100" sessionid="963f79a2" />
     <plugin name="cordova-plugin-email-composer" spec="^0.8.15" />
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.4.1" />
-    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <engine name="android" spec="7.0.0" />
 </widget>

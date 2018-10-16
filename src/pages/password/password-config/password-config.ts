@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SocialSharing } from '@ionic-native/social-sharing';
 
 @IonicPage()
 @Component({
@@ -22,8 +21,7 @@ export class PasswordConfigPage implements OnInit{
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private storage: Storage, public formBuilder: FormBuilder,
-    private toastCtrl: ToastController, private alertCtrl: AlertController,
-    private socialSharing: SocialSharing) {
+    private toastCtrl: ToastController, private alertCtrl: AlertController) {
   }
 
   ngOnInit() {

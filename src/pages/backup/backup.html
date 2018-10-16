@@ -1,0 +1,17 @@
+<ion-header no-border>
+  <ion-navbar color="light">
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="primary"></ion-icon>
+    </button>
+    <ion-title>Backup dos Dados</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <p>Para <strong>criar</strong> uma <strong>cópia de segurança</strong> dos seus dados, clique em <strong>Exportar Dados</strong></p>
+  <p>Para <strong>importar</strong> uma <strong>cópia de segurança</strong> dos seus dados, clique em <strong>Importar Dados<strong></p>
+  <button class="btn-add" ion-button block outline (click)="exportFile()">
+    Exportar backup</button>
+  <button class="btn-add" ion-button block outline (click)="importFile()">
+    Importar backup</button>
+</ion-content>
