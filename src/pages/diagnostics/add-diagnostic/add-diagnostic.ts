@@ -26,92 +26,92 @@ export class AddDiagnosticPage implements OnInit {
     private storage: Storage, public formBuilder: FormBuilder,
     private toastCtrl: ToastController) { }
 
-    ngOnInit() {
-      this.diagnosticsIds = [];
-      this.getDiagnosticsIds();
-      this.formGroup = this.formBuilder.group({
-        'name': ['', Validators.required]
-      });
-    }
+  ngOnInit() {
+    this.diagnosticsIds = [];
+    this.getDiagnosticsIds();
+    this.formGroup = this.formBuilder.group({
+      'name': ['', Validators.required]
+    });
+  }
 
-    presentToast(message: string, position: string, duration: number) {
-      let toast = this.toastCtrl.create({
-        message: message,
-        duration: duration,
-        position: position
-      });
+  presentToast(message: string, position: string, duration: number) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: duration,
+      position: position
+    });
+
+    toast.present();
+  }
+
+  // DATABASE FUNCTIONS
   
-      toast.present();
+  addDiagnostic(formValue: any) {
+    /*if(formValue.name != '') {
+    } else {
+      this.presentToast('Você deve colocar um nome.', 'bottoms', 3000);
+    }*/
+    let diagnostic: Diagnostic = {
+      id: this.nextId,
+      name: formValue.name,
+      date: moment().format('YYYY-MM-DD'),
+      isConcluded: false
     }
-  
-    // DATABASE FUNCTIONS
-    
-    addDiagnostic(formValue: any) {
-      /*if(formValue.name != '') {
-      } else {
-        this.presentToast('Você deve colocar um nome.', 'bottoms', 3000);
-      }*/
-      let diagnostic: Diagnostic = {
-        id: this.nextId,
-        name: formValue.name,
-        date: moment().format('YYYY-MM-DD'),
-        isConcluded: false
-      }
-      this.storage.set(`Diagnostic ${this.nextId}`, diagnostic)
-        .then(() => {
-          this.nextId += 1;
-          this.setNextId(this.nextId);
+    this.storage.set(`Diagnostic ${this.nextId}`, diagnostic)
+      .then(() => {
+        this.nextId += 1;
+        this.setNextId(this.nextId);
+      })
+      .then(() => {
+        this.diagnosticsIds.push(diagnostic.id);
+        this.setDiagnosticsIds(this.diagnosticsIds);
+      })
+      .then(() => {
+        this.navCtrl.pop();
+        this.navCtrl.push(this.diagnosticProfilePage, {
+          id: this.nextId-1
         })
-        .then(() => {
-          this.diagnosticsIds.push(diagnostic.id);
-          this.setDiagnosticsIds(this.diagnosticsIds);
-        })
-        .then(() => {
-          this.navCtrl.pop();
-          this.navCtrl.push(this.diagnosticProfilePage, {
-            id: this.nextId-1
-          })
-        })
-        .catch(err => {
-          this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
-          console.log(err);
-        })
-    }
+      })
+      .catch(err => {
+        this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
+        console.log(err);
+      })
+  }
 
-    setNextId(id: number) {
-      this.storage.set('Next Diagnostic id', id)
-    }
+  setNextId(id: number) {
+    this.storage.set('Next Diagnostic id', id)
+  }
 
-    setDiagnosticsIds(diagnosticsIds: number[]) {
-      this.storage.set('DiagnosticsIds', diagnosticsIds)
-    }
+  setDiagnosticsIds(diagnosticsIds: number[]) {
+    this.storage.set('DiagnosticsIds', diagnosticsIds)
+  }
 
-    getDiagnosticsIds() {
-      this.storage.get('DiagnosticsIds')
-        .then(val => {
-          if (val != null) {
-            this.diagnosticsIds = val;
-          }
-          console.log(this.diagnosticsIds);
-        })
-        .then(() => {
-          this.getNextId();
-        })
-        .catch(err => {
-          this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
-          console.log(err);
-        })
-    }
+  getDiagnosticsIds() {
+    this.storage.get('DiagnosticsIds')
+      .then(val => {
+        if (val != null) {
+          this.diagnosticsIds = val;
+        }
+        console.log(this.diagnosticsIds);
+      })
+      .then(() => {
+        this.getNextId();
+      })
+      .catch(err => {
+        this.presentToast('Ocorreu um erro. Volte para a página inicial e tente novamente.', 'bottoms', 3000);
+        console.log(err);
+      })
+  }
 
-    getNextId() {
-      this.storage.get('Next Diagnostic id')
-        .then(val => {
-          if (val != null) {
-            this.nextId = val;
-          } else {
-            this.nextId = 0;
-          }
-          console.log((this.nextId));
-        })
-    }
+  getNextId() {
+    this.storage.get('Next Diagnostic id')
+      .then(val => {
+        if (val != null) {
+          this.nextId = val;
+        } else {
+          this.nextId = 0;
+        }
+        console.log((this.nextId));
+      })
+  }
 }

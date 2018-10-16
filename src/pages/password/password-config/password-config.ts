@@ -39,7 +39,8 @@ export class PasswordConfigPage implements OnInit{
   }
 
   ionViewWillEnter() {
-    this.getEmailAndPassword();
+    //this.getEmailAndPassword();
+    this.getPassword();
   }
 
   goToEditPassword() {
