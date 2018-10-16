@@ -10,7 +10,7 @@ import * as moment from 'moment';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = `MyWalletsPage`;
+  rootPage: any = `PasswordValidationPage`;
 
   pages: Array<{title: string, component: string, icon: string, enabled: boolean}>;
 
@@ -22,11 +22,11 @@ export class MyApp {
       { title: 'Minhas Carteiras', component: `MyWalletsPage`, icon: 'cash', enabled: true },
       { title: 'Meus Diagnósticos', component: `MyDiagnosticsPage`, icon: 'clipboard', enabled: true },
       { title: 'Meu Histórico', component: `MyHistoriesPage`, icon: 'trending-up', enabled: true },
-      { title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open', enabled: false },
-      { title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done', enabled: false },
+      //{ title: 'Exportar Planilha', component: `MyWalletsPage`, icon: 'open', enabled: false },
+      //{ title: 'Backup', component: `MyWalletsPage`, icon: 'cloud-done', enabled: false },
       //{ title: 'Ajuda', component: `MyWalletsPage`, icon: 'help-circle', enabled: false },
       { title: 'Gerenciar Senha', component: `PasswordConfigPage`, icon: 'lock', enabled: true },
-      { title: 'Sobre o Aplicativo', component: `MyWalletsPage`, icon: 'information-circle', enabled: false },
+      { title: 'Sobre o Aplicativo', component: `AboutPage`, icon: 'information-circle', enabled: true },
     ];
 
   }
