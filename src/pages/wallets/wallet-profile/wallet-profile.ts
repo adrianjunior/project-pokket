@@ -15,7 +15,6 @@ export class WalletProfilePage {
 
   addTransactionPage: string = `AddTransactionPage`;
   transactionProfilePage: string = `TransactionProfilePage`;
-  walletExtractPage: string = `WalletExtractPage`;
   editWalletPage: string = `EditWalletPage`;
   walletResult: string = `WalletResultPage`;
 
@@ -53,12 +52,6 @@ export class WalletProfilePage {
       isIncome: isIncome,
       id: this.walletId
     });
-  }
-  
-  goToWalletExtract() {
-    this.navCtrl.push(this.walletExtractPage, {
-      id: this.walletId
-    })
   }
 
   goToEditWallet() {

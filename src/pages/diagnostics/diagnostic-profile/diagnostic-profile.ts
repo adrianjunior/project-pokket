@@ -25,7 +25,6 @@ export class DiagnosticProfilePage {
 
   addDiagnosticItemPage: string = `AddDiagnosticItemPage`
   diagnosticItemProfilePage: string = `DiagnosticItemProfilePage`
-  diagnosticsItemsPage: string = `DiagnosticItemsPage`
   editDiagnosticPage: string = `EditDiagnosticPage`
   diagnosticResultsPage: string = `DiagnosticResultsPage`
   addDiagnosticWalletPage: string = `AddDiagnosticWalletPage`
@@ -61,12 +60,6 @@ export class DiagnosticProfilePage {
     this.navCtrl.push(this.addDiagnosticWalletPage, {
       id: this.diagnosticId
     });
-  }
-
-  goToDiagnosticItemsList() {
-    this.navCtrl.push(this.diagnosticsItemsPage, {
-      id: this.diagnosticId
-    })
   }
 
   goToEditDiagnostic() {

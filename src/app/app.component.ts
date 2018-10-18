@@ -10,7 +10,8 @@ import * as moment from 'moment';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = `PasswordValidationPage`;
+  //rootPage: any = `PasswordValidationPage`;
+  rootPage: any = `MyWalletsPage`;
 
   pages: Array<{title: string, component: string, icon: string, enabled: boolean}>;
 
