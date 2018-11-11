@@ -4,6 +4,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { File } from '@ionic-native/file';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { SMS } from '@ionic-native/sms';
 
 import { MyApp } from './app.component';
 
@@ -28,7 +29,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     File,
-    SocialSharing
+    SocialSharing,
+    SMS
   ]
 })
 export class AppModule {}

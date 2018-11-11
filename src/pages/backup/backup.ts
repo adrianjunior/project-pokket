@@ -48,23 +48,34 @@ export class BackupPage {
   getAndSendFile() {
     this.file.resolveDirectoryUrl(this.file.dataDirectory)
       .then(url => {
+        this.presentToast('3rd Then', 'bottom', 10000)
         this.file.getFile(url, `Backup.json`, {})
           .then(file => {
             this.socialSharing.share('Seu Backup Meubolso', 'Backup aplicativo Meubolso', file.fullPath)
             console.log(file.fullPath)
           })
+      }).catch(err => {
+        this.presentToast(err, 'bottom', 10000)
       })
   }
   //DATABASE FUNCTIONS
   readAllData() {
     let data: {key: string, value: string}[];
+    
     this.storage.forEach((value, key, index) => {
       data.push({key, value});
+      this.presentToast(`${key} ${value} ${index}`, 'bottom', 10000)
     }).then(() => {
+      this.presentToast('1st Then', 'bottom', 10000)
       this.file.writeFile(this.file.dataDirectory, `Backup.json`, JSON.stringify(data), {replace: true})
         .then(() => {
+          this.presentToast('2nd Then', 'bottom', 10000)
           this.getAndSendFile();
+        }).catch(err => {
+          this.presentToast(err, 'bottom', 10000)
         })
+    }).catch(err => {
+      this.presentToast(err, 'bottom', 10000)
     })
   }
   writeAllData(data: {key: string, value:string}[]) {
@@ -75,8 +86,12 @@ export class BackupPage {
           this.storage.set(keyValue.key, keyValue.value)
             .then(() => {
               this.navCtrl.setRoot(`MyWalletsPage`);
+            }).catch(err => {
+              this.presentToast(err, 'bottom', 10000)
             })
         })
+      }).catch(err => {
+        this.presentToast(err, 'bottom', 10000)
       })
   }
 }
